@@ -5,13 +5,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
 import { nav, site } from "@/lib/content";
+import { normPath } from "@/lib/paths";
 import { track, useBooking } from "./booking";
 import { useCart } from "./cart";
 import { HeaderCartButton, HeaderCartPanel } from "./HeaderCart";
 import { shouldSoftClick, useSoftNav } from "./softNav";
 
 function BrandMark({ className = "" }: { className?: string }) {
-  const pathname = usePathname();
+  const pathname = normPath(usePathname());
   const go = useSoftNav();
   const fromMenu =
     pathname === "/menu" ||
@@ -42,7 +43,7 @@ function BrandMark({ className = "" }: { className?: string }) {
 }
 
 function NavLinks({ onNavigate, className = "" }: { onNavigate?: () => void; className?: string }) {
-  const pathname = usePathname();
+  const pathname = normPath(usePathname());
 
   return nav.map((item) => (
     <Link
@@ -207,7 +208,7 @@ export function Header() {
 }
 
 export function Footer() {
-  const pathname = usePathname();
+  const pathname = normPath(usePathname());
   if (pathname === "/" || pathname === "/contacts") return null;
 
   return (
@@ -227,7 +228,7 @@ export function Footer() {
 }
 
 export function FloatingBook() {
-  const pathname = usePathname();
+  const pathname = normPath(usePathname());
   const { setOpen } = useBooking();
   const { setPanelOpen, setCheckoutOpen } = useCart();
   const [visible, setVisible] = useState(pathname !== "/");

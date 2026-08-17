@@ -9,6 +9,7 @@ type Props = {
   className?: string;
   center?: boolean;
   snap?: "center";
+  drag?: boolean;
 };
 
 type Anim = { frame: number; active: boolean };
@@ -100,7 +101,7 @@ function snapToCenter(node: HTMLElement) {
 }
 
 export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
-  { children, className = "", center = false, snap },
+  { children, className = "", center = false, snap, drag: canDrag = true },
   forwarded,
 ) {
   const nodeRef = useRef<HTMLDivElement | null>(null);
@@ -177,6 +178,7 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
       onPointerDown={(event) => {
         const node = nodeRef.current;
         if (node) cancelScrollAnim(node);
+        if (!canDrag) return;
         if (event.pointerType !== "mouse" || event.button !== 0) return;
         if (!node) return;
         drag.current = {
@@ -189,7 +191,7 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
         };
       }}
       onPointerMove={(event) => {
-        if (!drag.current.tracking) return;
+        if (!canDrag || !drag.current.tracking) return;
         const node = nodeRef.current;
         if (!node) return;
         const dx = event.clientX - drag.current.startX;
@@ -210,10 +212,10 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
         if (drag.current.axis !== "x") return;
         node.scrollLeft = drag.current.startScroll - dx;
       }}
-      onPointerUp={endDrag}
-      onPointerCancel={endDrag}
+      onPointerUp={canDrag ? endDrag : undefined}
+      onPointerCancel={canDrag ? endDrag : undefined}
       onClickCapture={(event) => {
-        if (!drag.current.moved) return;
+        if (!canDrag || !drag.current.moved) return;
         event.preventDefault();
         event.stopPropagation();
         drag.current.moved = false;

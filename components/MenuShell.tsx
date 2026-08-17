@@ -5,15 +5,17 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { brunch, hits, lunch, menuCategories, type Hit } from "@/lib/content";
 import { asset } from "@/lib/asset";
+import { navHref, normPath } from "@/lib/paths";
 import { DishActions } from "./DishActions";
 import { MenuPageHeader } from "./MenuPageHeader";
 import { Price } from "./BynSign";
 import { shouldSoftClick } from "./softNav";
 
 function sectionFromPath(pathname: string) {
-  if (pathname === "/lunch") return "lunch";
-  if (pathname === "/brunch") return "brunch";
-  const cat = menuCategories.find((item) => item.href === pathname);
+  const path = normPath(pathname);
+  if (path === "/lunch") return "lunch";
+  if (path === "/brunch") return "brunch";
+  const cat = menuCategories.find((item) => item.href === path);
   return cat?.id ?? "hits";
 }
 
@@ -68,7 +70,7 @@ export function MenuShell() {
 
   function select(id: string, href: string) {
     setCurrent(id);
-    router.push(withTakeaway(href, takeaway), { scroll: false });
+    router.push(navHref(withTakeaway(href, takeaway)), { scroll: false });
   }
 
   const cat = menuCategories.find((item) => item.id === current);

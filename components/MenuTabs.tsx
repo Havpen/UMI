@@ -2,6 +2,7 @@
 
 import { HScroll } from "./HScroll";
 import { menuCategories } from "@/lib/content";
+import { navHref } from "@/lib/paths";
 import Link from "next/link";
 
 function tabClass(active: boolean) {
@@ -27,12 +28,12 @@ export function MenuTabs({
   onSelect?: (id: string, href: string) => void;
 }) {
   return (
-    <HScroll>
+    <HScroll drag={false}>
       <div className="flex w-max min-w-full gap-3 py-1 md:gap-4">
         {tabs.map((tab) => (
           <Link
             key={tab.id}
-            href={takeaway ? `${tab.href}?mode=takeaway` : tab.href}
+            href={takeaway ? navHref(`${tab.href}?mode=takeaway`) : navHref(tab.href)}
             prefetch
             draggable={false}
             className={tabClass(current ? current === tab.id : tab.id === "hits")}
