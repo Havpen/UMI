@@ -6,9 +6,33 @@ import { asset } from "@/lib/asset";
 import { site } from "@/lib/content";
 import { track, useBooking } from "./booking";
 
+function fitHeroInner(disk: HTMLElement, inner: HTMLElement) {
+  inner.style.transform = "none";
+  const styles = getComputedStyle(disk);
+  const padY = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
+  const avail = disk.clientHeight - padY;
+  const need = inner.scrollHeight;
+  if (avail <= 0 || need <= avail) return;
+  inner.style.transform = `scale(${Math.max(0.72, avail / need)})`;
+}
+
 export function Hero() {
   const { setOpen } = useBooking();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const diskRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const disk = diskRef.current;
+    const inner = disk?.querySelector<HTMLElement>("[data-hero-inner]");
+    if (!disk || !inner) return;
+
+    const fit = () => fitHeroInner(disk, inner);
+    const observer = new ResizeObserver(fit);
+    observer.observe(disk);
+    void document.fonts?.ready.then(fit);
+    fit();
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -33,7 +57,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section data-hero className="relative h-[100svh] min-h-[640px] overflow-hidden">
+    <section data-hero className="hero-stage">
       <img
         src={`${asset("/media/hero-poster.jpg")}?v=2`}
         alt=""
@@ -59,35 +83,37 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-t from-[rgba(244,239,230,0.4)] via-transparent to-[rgba(244,239,230,0.08)]" />
 
       <div className="relative z-10 h-full">
-        <div className="hero-disk glass">
-          <img
-            src={`${asset("/brand/umi-mark-transparent.png")}?v=6`}
-            alt="UMI"
-            width={1329}
-            height={799}
-            className="hero-logo"
-          />
-          <div className="hero-copy">
-            <h1>{site.h1}.</h1>
-            <p className="hero-tag text-ink-soft">
-              Искусство баланса
-              <br />
-              между Востоком и Европой.
-            </p>
-            <button
-              type="button"
-              className="hero-book hover-grow"
-              onClick={() => {
-                track("click_booking_cta");
-                track("booking_open");
-                setOpen(true);
-              }}
-            >
-              Забронировать стол
-            </button>
-            <Link href="/menu?mode=takeaway" className="hero-takeaway hover-grow text-ink-soft hover:text-ink">
-              Заказать на вынос
-            </Link>
+        <div ref={diskRef} className="hero-disk glass">
+          <div className="hero-disk-inner" data-hero-inner>
+            <img
+              src={`${asset("/brand/umi-mark-transparent.png")}?v=6`}
+              alt="UMI"
+              width={1329}
+              height={799}
+              className="hero-logo"
+            />
+            <div className="hero-copy">
+              <h1>{site.h1}.</h1>
+              <p className="hero-tag text-ink-soft">
+                Искусство баланса
+                <br />
+                между Востоком и Европой.
+              </p>
+              <button
+                type="button"
+                className="hero-book hover-grow"
+                onClick={() => {
+                  track("click_booking_cta");
+                  track("booking_open");
+                  setOpen(true);
+                }}
+              >
+                Забронировать стол
+              </button>
+              <Link href="/menu?mode=takeaway" className="hero-takeaway hover-grow text-ink-soft hover:text-ink">
+                Заказать на вынос
+              </Link>
+            </div>
           </div>
         </div>
       </div>
