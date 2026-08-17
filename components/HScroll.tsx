@@ -185,7 +185,7 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
   return (
     <div
       ref={setRefs}
-      className={`scroll-touch relative w-full min-w-0 max-w-full select-none ${center ? "flex" : ""} ${className}`}
+      className={`scroll-touch relative min-w-0 max-w-full select-none ${center ? "flex" : ""} ${className}`}
       onDragStart={(event) => event.preventDefault()}
       onPointerDown={(event) => {
         const node = nodeRef.current;
