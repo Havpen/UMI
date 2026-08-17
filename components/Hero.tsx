@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { asset } from "@/lib/asset";
 import { site } from "@/lib/content";
+import { navHref } from "@/lib/paths";
 import { track, useBooking } from "./booking";
 
 export function Hero() {
@@ -33,7 +34,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section data-hero className="relative h-[100svh] min-h-[640px] overflow-hidden">
+    <section data-hero className="hero-stage">
       <img
         src={`${asset("/media/hero-poster.jpg")}?v=2`}
         alt=""
@@ -85,7 +86,7 @@ export function Hero() {
             >
               Забронировать стол
             </button>
-            <Link href="/menu?mode=takeaway" className="hero-takeaway hover-grow text-ink-soft hover:text-ink">
+            <Link href={navHref("/menu?mode=takeaway")} className="hero-takeaway hover-grow text-ink-soft hover:text-ink">
               Заказать на вынос
             </Link>
           </div>
