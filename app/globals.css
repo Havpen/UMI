@@ -40,6 +40,8 @@
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    color-scheme: light only;
+    background-color: #f4efe6;
   }
 
   body {
@@ -47,6 +49,7 @@
     background: var(--color-paper);
     color: var(--color-ink);
     font-weight: 600;
+    color-scheme: light only;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -99,32 +102,61 @@
   }
 }
 
+.hero-stage {
+  position: relative;
+  height: 100vh;
+  min-height: 32rem;
+  overflow: hidden;
+}
+
+@supports (height: 100svh) {
+  .hero-stage {
+    height: 100svh;
+  }
+}
+
 .hero-disk {
   position: absolute;
   left: 50%;
   top: 50%;
   box-sizing: border-box;
-  width: min(80vw, 28rem, 70svh);
-  height: min(80vw, 28rem, 70svh);
-  max-width: 70svh;
-  max-height: 70svh;
+  --hero-size: min(80vw, 28rem, calc(100vh - 7.25rem));
+  width: var(--hero-size);
+  height: var(--hero-size);
   aspect-ratio: 1 / 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 3.25rem 2.5rem;
+  gap: 0;
+  padding: 12%;
   overflow: hidden;
   border-radius: 50%;
   text-align: center;
   transform: translate(-50%, -50%);
 }
 
+@supports (height: 100svh) {
+  .hero-disk {
+    --hero-size: min(80vw, 28rem, calc(100svh - 7.25rem));
+  }
+}
+
+.hero-disk-inner {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center center;
+}
+
 .hero-disk .hero-logo {
   display: block;
-  width: 55.5%;
+  width: 52%;
+  max-height: 28%;
   height: auto;
+  object-fit: contain;
   flex: none;
   transform-origin: center center;
 }
@@ -167,11 +199,13 @@
 
 @media (min-width: 768px) {
   .hero-disk {
-    width: min(42rem, 48vw, 72svh);
-    height: min(42rem, 48vw, 72svh);
-    max-width: 72svh;
-    max-height: 72svh;
+    --hero-size: min(42rem, 48vw, calc(100vh - 8.5rem));
     padding: 4.5rem 3.5rem;
+  }
+
+  .hero-disk .hero-logo {
+    width: 55.5%;
+    max-height: none;
   }
 
   .hero-disk h1 {
@@ -193,6 +227,14 @@
   .hero-disk .hero-takeaway {
     margin-top: 0.6rem;
     font-size: 1.375rem;
+  }
+}
+
+@supports (height: 100svh) {
+  @media (min-width: 768px) {
+    .hero-disk {
+      --hero-size: min(42rem, 48vw, calc(100svh - 8.5rem));
+    }
   }
 }
 
