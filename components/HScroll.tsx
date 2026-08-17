@@ -131,6 +131,7 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
       drag.current.tracking = false;
       drag.current.axis = null;
       node?.classList.remove("is-dragging");
+      if (node) node.style.touchAction = "";
       if (node?.hasPointerCapture(event.pointerId)) {
         node.releasePointerCapture(event.pointerId);
       }
@@ -161,6 +162,7 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
       settle();
     };
 
+    settle();
     node.addEventListener("scroll", onScroll, { passive: true });
     node.addEventListener("scrollend", onEnd);
     return () => {
@@ -169,6 +171,16 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
       node.removeEventListener("scrollend", onEnd);
     };
   }, [snap]);
+
+  useEffect(() => {
+    const node = nodeRef.current;
+    if (!node || !canDrag) return;
+    const blockIfHorizontal = (event: Event) => {
+      if (drag.current.axis === "x") event.preventDefault();
+    };
+    node.addEventListener("touchmove", blockIfHorizontal, { passive: false });
+    return () => node.removeEventListener("touchmove", blockIfHorizontal);
+  }, [canDrag]);
 
   return (
     <div
@@ -179,7 +191,7 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
         const node = nodeRef.current;
         if (node) cancelScrollAnim(node);
         if (!canDrag) return;
-        if (event.pointerType !== "mouse" || event.button !== 0) return;
+        if (event.pointerType === "mouse" && event.button !== 0) return;
         if (!node) return;
         drag.current = {
           tracking: true,
@@ -203,13 +215,14 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
             drag.current.tracking = false;
             return;
           }
-          drag.current.moved = true;
+          node.style.touchAction = "none";
           node.classList.add("is-dragging");
           if (!node.hasPointerCapture(event.pointerId)) {
             node.setPointerCapture(event.pointerId);
           }
         }
         if (drag.current.axis !== "x") return;
+        if (Math.abs(dx) > 14) drag.current.moved = true;
         node.scrollLeft = drag.current.startScroll - dx;
       }}
       onPointerUp={canDrag ? endDrag : undefined}

@@ -28,7 +28,7 @@ export function MenuTabs({
   onSelect?: (id: string, href: string) => void;
 }) {
   return (
-    <HScroll drag={false}>
+    <HScroll>
       <div className="flex w-max min-w-full gap-3 py-1 md:gap-4">
         {tabs.map((tab) => (
           <Link

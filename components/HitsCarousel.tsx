@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef } from "react";
 import { asset } from "@/lib/asset";
 import { menuCategories } from "@/lib/content";
+import { navHref } from "@/lib/paths";
 import { HScroll, scrollToCard } from "./HScroll";
 
 const sections = [
@@ -12,13 +13,21 @@ const sections = [
   { id: "brunch", title: "Бранч", href: "/brunch" },
 ];
 
-function Arrow({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
+function Arrow({
+  dir,
+  onClick,
+  className = "",
+}: {
+  dir: "prev" | "next";
+  onClick: () => void;
+  className?: string;
+}) {
   return (
     <button
       type="button"
       aria-label={dir === "prev" ? "Предыдущий раздел" : "Следующий раздел"}
       onClick={onClick}
-      className="hover-grow glass flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg"
+      className={`hover-grow glass h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg ${className || "flex"}`}
     >
       {dir === "prev" ? "‹" : "›"}
     </button>
@@ -85,25 +94,30 @@ export function HitsCarousel() {
   }, [updateFocus]);
 
   return (
-    <section className="px-0 py-16">
+    <section className="py-16">
       <div className="page-shell text-center">
         <h2 className="font-serif text-6xl">Меню</h2>
+      </div>
 
-        <div className="mt-8 flex w-full items-center gap-3 lg:gap-5">
-          <Arrow dir="prev" onClick={() => goTo(active.current - 1)} />
-          <HScroll
-            ref={scroller}
-            snap="center"
-            className="snap-row min-w-0 flex-1 gap-4 py-6 [--card:min(19rem,82%)] px-[max(0px,calc((100%-var(--card))/2))] md:gap-5 md:px-0 md:[--card:calc((100%-2rem)/3)] lg:gap-5 lg:[--card:calc((100%-5rem)/5)]"
-          >
-            {sections.map((section) => (
-              <Link
-                key={section.id}
-                data-card
-                href={section.href}
-                className="w-[var(--card)] shrink-0"
-                draggable={false}
-              >
+      <div className="relative mt-8 w-full">
+        <Arrow
+          dir="prev"
+          onClick={() => goTo(active.current - 1)}
+          className="absolute left-0 top-1/2 z-10 hidden -translate-y-1/2 md:flex"
+        />
+        <HScroll
+          ref={scroller}
+          snap="center"
+          className="snap-row min-w-0 w-full gap-3 py-5 [--card:calc(100%-2.5rem)] md:gap-5 md:px-12 md:[--card:calc((100%-2rem)/3)] lg:px-14 lg:[--card:calc((100%-5rem)/5)]"
+        >
+          {sections.map((section) => (
+            <Link
+              key={section.id}
+              data-card
+              href={navHref(section.href)}
+              className="w-[var(--card)] shrink-0"
+              draggable={false}
+            >
                 <div
                   data-card-visual
                   className="origin-center overflow-hidden rounded-3xl bg-paper-2 will-change-transform"
@@ -120,12 +134,17 @@ export function HitsCarousel() {
               </Link>
             ))}
           </HScroll>
-          <Arrow dir="next" onClick={() => goTo(active.current + 1)} />
+          <Arrow
+            dir="next"
+            onClick={() => goTo(active.current + 1)}
+            className="absolute right-0 top-1/2 z-10 hidden -translate-y-1/2 md:flex"
+          />
         </div>
 
+      <div className="page-shell mt-8 text-center">
         <Link
-          href="/menu"
-          className="hover-grow mt-8 inline-flex rounded-full bg-ink px-8 py-3 text-xl text-paper lg:px-10 lg:py-3.5 lg:text-2xl"
+          href={navHref("/menu")}
+          className="hover-grow inline-flex rounded-full bg-ink px-8 py-3 text-xl text-paper lg:px-10 lg:py-3.5 lg:text-2xl"
         >
           Всё меню
         </Link>
