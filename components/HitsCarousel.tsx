@@ -46,7 +46,7 @@ export function HitsCarousel() {
     const el = scroller.current;
     if (!el) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const oneCard = window.matchMedia("(hover: none), (max-width: 767px)").matches;
+    const oneCard = window.matchMedia("(max-width: 767px)").matches;
     const mid = el.scrollLeft + el.clientWidth / 2;
     const items = cardsOf(el);
     let best = 0;
