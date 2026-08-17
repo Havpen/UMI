@@ -231,10 +231,16 @@ export function FloatingBook() {
   const pathname = normPath(usePathname());
   const { setOpen } = useBooking();
   const { setPanelOpen, setCheckoutOpen } = useCart();
-  const [visible, setVisible] = useState(pathname !== "/");
+  const [visible, setVisible] = useState(false);
+  const onHome = pathname === "/";
 
   useEffect(() => {
-    const hero = pathname === "/" ? document.querySelector("[data-hero]") : null;
+    if (!onHome) {
+      setVisible(false);
+      return;
+    }
+
+    const hero = document.querySelector("[data-hero]");
     const maps = [...document.querySelectorAll("[data-map-canvas]")];
     let heroInView = Boolean(hero);
     let mapCoversFab = false;
@@ -266,14 +272,15 @@ export function FloatingBook() {
 
     if (hero && heroIo) heroIo.observe(hero);
     maps.forEach((el) => mapIo?.observe(el));
-    if (!hero && maps.length === 0) setVisible(true);
-    else sync();
+    sync();
 
     return () => {
       heroIo?.disconnect();
       mapIo?.disconnect();
     };
-  }, [pathname]);
+  }, [onHome]);
+
+  if (!onHome) return null;
 
   return (
     <button
