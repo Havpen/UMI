@@ -17,9 +17,6 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  viewportFit: "cover",
-  colorScheme: "light",
-  themeColor: "#f4efe6",
 };
 
 export const metadata: Metadata = {
@@ -33,15 +30,11 @@ export const metadata: Metadata = {
     locale: "ru_BY",
     type: "website",
   },
-  other: {
-    "color-scheme": "light only",
-    "supported-color-schemes": "light",
-  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={nunito.variable} style={{ colorScheme: "light only" }}>
+    <html lang="ru" className={nunito.variable}>
       <body className="font-sans antialiased">
         <BookingProvider>
           <CartProvider>

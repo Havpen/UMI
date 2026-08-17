@@ -27,7 +27,7 @@ function Arrow({
       type="button"
       aria-label={dir === "prev" ? "Предыдущий раздел" : "Следующий раздел"}
       onClick={onClick}
-      className={`hits-arrow hover-grow glass h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg ${className}`}
+      className={`hover-grow glass h-11 w-11 shrink-0 items-center justify-center rounded-full text-lg ${className || "flex"}`}
     >
       {dir === "prev" ? "‹" : "›"}
     </button>
@@ -46,7 +46,6 @@ export function HitsCarousel() {
     const el = scroller.current;
     if (!el) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const oneCard = window.matchMedia("(hover: none), (max-width: 767px)").matches;
     const mid = el.scrollLeft + el.clientWidth / 2;
     const items = cardsOf(el);
     let best = 0;
@@ -59,7 +58,7 @@ export function HitsCarousel() {
       }
       const visual = card.querySelector<HTMLElement>("[data-card-visual]");
       if (!visual) return;
-      if (reduce || oneCard) {
+      if (reduce) {
         visual.style.transform = "";
         return;
       }
@@ -104,15 +103,19 @@ export function HitsCarousel() {
         <Arrow
           dir="prev"
           onClick={() => goTo(active.current - 1)}
-          className="hits-arrow-prev"
+          className="absolute left-0 top-1/2 z-10 hidden -translate-y-1/2 md:flex"
         />
-        <HScroll ref={scroller} snap="center" className="hits-track snap-row min-w-0 w-full py-5">
+        <HScroll
+          ref={scroller}
+          snap="center"
+          className="snap-row min-w-0 w-full gap-3 py-5 [--card:calc(100%-2.5rem)] md:gap-5 md:px-12 md:[--card:calc((100%-2rem)/3)] lg:px-14 lg:[--card:calc((100%-5rem)/5)]"
+        >
           {sections.map((section) => (
             <Link
               key={section.id}
               data-card
               href={navHref(section.href)}
-              className="hits-card"
+              className="w-[var(--card)] shrink-0"
               draggable={false}
             >
                 <div
@@ -134,7 +137,7 @@ export function HitsCarousel() {
           <Arrow
             dir="next"
             onClick={() => goTo(active.current + 1)}
-            className="hits-arrow-next"
+            className="absolute right-0 top-1/2 z-10 hidden -translate-y-1/2 md:flex"
           />
         </div>
 
