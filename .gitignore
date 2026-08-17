@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+.env
+.env*.local
+tmp-preview
+assets/*.MOV
+*.log
+**/__pycache__/
+*.tsbuildinfo
