@@ -431,7 +431,7 @@
 
 @media (min-width: 768px) {
   .hero-disk {
-    --hero-size: min(42rem, 48vw, calc(100vh - 8.5rem));
+    --hero-size: min(42rem, 48vw, calc(100vh - 12.5rem));
     padding: 4.5rem 3.5rem;
   }
 
@@ -465,7 +465,7 @@
 @supports (height: 100svh) {
   @media (min-width: 768px) {
     .hero-disk {
-      --hero-size: min(42rem, 48vw, calc(100svh - 8.5rem));
+      --hero-size: min(42rem, 48vw, calc(100svh - 12.5rem));
     }
   }
 }
