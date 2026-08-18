@@ -3,10 +3,14 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { asset } from "@/lib/asset";
-import { minskNow, site, todayHallHours } from "@/lib/content";
+import { dishAlt, dishById, dishPhoto, minskNow, site, todayHallHours } from "@/lib/content";
+import { isHoneypot, sanitizePhoneInput, validateCommentField, validateTakeawayName, validatePhone } from "@/lib/commentModeration";
+import { navHref } from "@/lib/paths";
 import { track } from "./booking";
 import { Price } from "./BynSign";
 import { useCart } from "./cart";
+import { SheetShell } from "./SheetShell";
+import { TimeField } from "./TimeField";
 
 function pad(value: number) {
   return String(value).padStart(2, "0");
@@ -74,11 +78,32 @@ export function TakeawaySheet() {
       return;
     }
     const data = new FormData(event.currentTarget);
+    if (isHoneypot(data.get("website"))) {
+      setSent(true);
+      return;
+    }
+    const nameError = validateTakeawayName(String(data.get("guestName") ?? ""));
+    if (nameError) {
+      setError(nameError);
+      return;
+    }
+    const phoneError = validatePhone(String(data.get("phone") ?? ""));
+    if (phoneError) {
+      setError(phoneError);
+      return;
+    }
+    const commentError = validateCommentField(String(data.get("comment") ?? ""));
+    if (commentError) {
+      setError(commentError);
+      return;
+    }
     const payload = {
+      name: String(data.get("guestName") ?? "").trim(),
       phone: data.get("phone"),
       time: data.get("time"),
       persons: data.get("persons"),
       comment: data.get("comment"),
+      website: data.get("website"),
       items,
       sum: sumLabel,
     };
@@ -88,7 +113,11 @@ export function TakeawaySheet() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("fail");
+      const json = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) {
+        setError(json.error || "Не удалось отправить заявку. Позвоните нам — подтвердим вынос по телефону.");
+        return;
+      }
       track("takeaway_submit");
       setSent(true);
       clear();
@@ -100,18 +129,11 @@ export function TakeawaySheet() {
   if (!mounted) return null;
 
   return (
-    <div className="fixed inset-0 z-50">
-      <button
-        type="button"
-        className={`booking-backdrop absolute inset-0 bg-[rgba(44,39,35,0.28)] ${visible ? "is-on" : ""}`}
-        aria-label="Закрыть"
-        onClick={() => setCheckoutOpen(false)}
-      />
-      <div
-        className={`glass booking-panel absolute left-1/2 top-1/2 max-h-[90vh] w-[min(26.5rem,calc(100%-1.5rem))] overflow-x-hidden overflow-y-auto rounded-3xl p-5 ${
-          visible ? "is-on" : ""
-        }`}
-      >
+    <SheetShell
+      visible={visible}
+      onClose={() => setCheckoutOpen(false)}
+      fitKey={`${sent ? "sent" : "form"}-${items.length}`}
+    >
         <div className="mb-4 flex items-start justify-between gap-4">
           <div>
             <p className="font-serif text-2xl">Заказ на вынос</p>
@@ -128,37 +150,42 @@ export function TakeawaySheet() {
           <p>Заявку получили, перезвоним.</p>
         ) : (
           <form className="grid min-w-0 gap-3" onSubmit={onSubmit}>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-4 gap-x-2 gap-y-3">
               {items.map((item) => (
-                <div key={item.id} className="relative h-16 w-16">
-                  <img
-                    src={asset("/media/dish-placeholder.jpg")}
-                    alt={item.name}
-                    className="h-16 w-16 rounded-xl object-cover"
-                  />
-                  <button
-                    type="button"
-                    aria-label={`Убрать ${item.name}`}
-                    className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[0.7rem] leading-none text-paper"
-                    onClick={() => remove(item.id)}
-                  >
-                    ×
-                  </button>
-                  {item.qty > 1 ? (
-                    <span className="absolute bottom-1 left-1 rounded bg-ink/80 px-1 text-[0.65rem] text-paper">
-                      ×{item.qty}
-                    </span>
-                  ) : null}
+                <div key={item.id} className="min-w-0">
+                  <div className="relative aspect-square overflow-hidden rounded-xl">
+                    <img
+                      src={asset(dishPhoto(dishById(item.id)))}
+                      alt={dishAlt(item.name)}
+                      className="h-full w-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      aria-label={`Убрать ${item.name}`}
+                      className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-ink text-[0.7rem] leading-none text-paper"
+                      onClick={() => remove(item.id)}
+                    >
+                      ×
+                    </button>
+                    {item.qty > 1 ? (
+                      <span className="absolute bottom-1 left-1 rounded bg-ink/80 px-1 text-[0.65rem] text-paper">
+                        ×{item.qty}
+                      </span>
+                    ) : null}
+                  </div>
+                  <p className="mt-1 line-clamp-2 text-center text-[0.7rem] font-medium leading-tight">
+                    {item.name}
+                  </p>
                 </div>
               ))}
               <button
                 type="button"
                 aria-label="Добавить ещё"
-                className="flex h-16 w-16 items-center justify-center rounded-xl border border-ink/15 bg-ink/[0.06] text-2xl text-ink"
+                className="flex aspect-square items-center justify-center self-start rounded-xl border border-ink/15 bg-ink/[0.06] text-2xl text-ink"
                 onClick={() => {
                   setCheckoutOpen(false);
                   setPanelOpen(false);
-                  router.push("/menu?mode=takeaway");
+                  router.push(navHref("/menu"));
                 }}
               >
                 +
@@ -174,28 +201,41 @@ export function TakeawaySheet() {
             ) : (
               <>
                 <label className="grid gap-1 text-sm">
+                  Имя
+                  <input
+                    required
+                    name="guestName"
+                    autoComplete="given-name"
+                    maxLength={40}
+                    pattern="\S+"
+                    title="Одно слово, без пробелов"
+                    className="w-full min-w-0 max-w-full rounded-xl border border-line bg-paper px-3 py-2"
+                    onInput={(event) => {
+                      event.currentTarget.value = event.currentTarget.value.replace(/\s+/g, "");
+                    }}
+                  />
+                </label>
+                <label className="grid gap-1 text-sm">
                   Телефон
                   <input
                     required
                     name="phone"
                     type="tel"
                     inputMode="tel"
-                    placeholder="+375 29 000-00-00"
+                    maxLength={13}
+                    pattern="\+?\d+"
+                    title="Только цифры, «+» только в начале, до 13 символов"
+                    placeholder="+375290000000"
                     className="w-full min-w-0 max-w-full rounded-xl border border-line bg-paper px-3 py-2"
+                    onInput={(event) => {
+                      event.currentTarget.value = sanitizePhoneInput(event.currentTarget.value);
+                    }}
                   />
                 </label>
-                <div className="grid min-w-0 grid-cols-[minmax(0,9.5rem)_minmax(0,1fr)] gap-3">
+                <div className="grid min-w-0 grid-cols-2 gap-3">
                   <label className="grid min-w-0 gap-1 text-sm">
                     Время сегодня
-                    <input
-                      required
-                      name="time"
-                      type="time"
-                      min={bounds.minTime}
-                      max={bounds.close}
-                      defaultValue={bounds.minTime}
-                      className="w-full min-w-0 max-w-full rounded-xl border border-line bg-paper px-3 py-2"
-                    />
+                    <TimeField name="time" min={bounds.minTime} max={bounds.close} defaultValue={bounds.minTime} />
                   </label>
                   <label className="grid min-w-0 gap-1 text-sm">
                     Персон
@@ -211,7 +251,11 @@ export function TakeawaySheet() {
                 </div>
                 <label className="grid gap-1 text-sm">
                   Комментарий
-                  <textarea name="comment" rows={3} className="w-full min-w-0 rounded-xl border border-line bg-paper px-3 py-2" />
+                  <textarea name="comment" rows={2} maxLength={500} className="w-full min-w-0 rounded-xl border border-line bg-paper px-3 py-2" />
+                </label>
+                <label className="sr-only" aria-hidden="true">
+                  Сайт
+                  <input name="website" tabIndex={-1} autoComplete="off" />
                 </label>
                 <p className="text-xs text-ink-soft">
                   Самовывоз, {site.addressFull}. Сегодня {bounds.open}–{todayHallHours().close}.
@@ -224,7 +268,6 @@ export function TakeawaySheet() {
             )}
           </form>
         )}
-      </div>
-    </div>
+    </SheetShell>
   );
 }

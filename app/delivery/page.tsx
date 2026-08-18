@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AggregatorLinks } from "@/components/AggregatorLinks";
 import { seo } from "@/lib/content";
+import { navHref } from "@/lib/paths";
 
 export const metadata: Metadata = {
   title: seo["/delivery"].title,
@@ -19,7 +20,7 @@ export default function DeliveryPage() {
         <p>Доставка</p>
         <AggregatorLinks />
       </div>
-      <Link href="/menu?mode=takeaway" className="mt-8 inline-block rounded-full bg-ink px-5 py-3 text-paper">
+      <Link href={navHref("/menu")} className="mt-8 inline-block rounded-full bg-ink px-5 py-3 text-paper">
         Собрать заказ на вынос
       </Link>
     </main>

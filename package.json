@@ -5,7 +5,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "media": "node scripts/prepare-media.mjs"
+    "media": "node scripts/prepare-media.mjs",
+    "bot": "node bot/poll.mjs",
+    "export:pages": "node scripts/export-pages.mjs"
   },
   "dependencies": {
     "next": "^15.5.23",

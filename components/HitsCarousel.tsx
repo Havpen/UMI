@@ -3,15 +3,9 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef } from "react";
 import { asset } from "@/lib/asset";
-import { menuCategories } from "@/lib/content";
+import { categoryCover, dishAlt, dishPhoto, menuCategories } from "@/lib/content";
 import { navHref } from "@/lib/paths";
 import { HScroll, scrollToCard } from "./HScroll";
-
-const sections = [
-  ...menuCategories.map((cat) => ({ id: cat.id, title: cat.title, href: cat.href })),
-  { id: "lunch", title: "Ланч", href: "/lunch" },
-  { id: "brunch", title: "Бранч", href: "/brunch" },
-];
 
 function Arrow({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
   return (
@@ -19,7 +13,7 @@ function Arrow({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) 
       type="button"
       aria-label={dir === "prev" ? "Предыдущий раздел" : "Следующий раздел"}
       onClick={onClick}
-      className="hover-grow glass flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-lg md:h-11 md:w-11"
+      className="hover-grow glass flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-lg md:h-11 md:w-11"
     >
       {dir === "prev" ? "‹" : "›"}
     </button>
@@ -50,7 +44,8 @@ export function HitsCarousel() {
       }
       const visual = card.querySelector<HTMLElement>("[data-card-visual]");
       if (!visual) return;
-      if (reduce) {
+      const mobile = window.matchMedia("(max-width: 767px)").matches;
+      if (reduce || mobile) {
         visual.style.transform = "";
         return;
       }
@@ -90,32 +85,36 @@ export function HitsCarousel() {
       <div className="page-shell text-center">
         <h2 className="font-serif text-6xl">Меню</h2>
 
-        <div className="mt-8 flex w-full items-center gap-2 md:gap-4">
+        <div className="mt-8 flex w-full items-center gap-1.5 md:gap-4">
           <Arrow dir="prev" onClick={() => goTo(active.current - 1)} />
-          <HScroll ref={scroller} snap="center" className="snap-row min-w-0 flex-1 gap-3 py-5 md:gap-4">
-            {sections.map((section) => (
-              <Link
-                key={section.id}
-                data-card
-                href={navHref(section.href)}
-                className="w-full shrink-0 md:w-[calc((100%-2rem)/3)] lg:w-[calc((100%-4rem)/5)]"
-                draggable={false}
-              >
-                <div
-                  data-card-visual
-                  className="origin-center overflow-hidden rounded-3xl bg-paper-2 will-change-transform"
+          <HScroll ref={scroller} snap="center" className="snap-row min-w-0 flex-1 items-stretch gap-3 overflow-x-auto py-2 md:gap-4 md:py-5">
+            {menuCategories.map((cat) => {
+              const cover = categoryCover(cat.id);
+              return (
+                <article
+                  key={cat.id}
+                  data-card
+                  className="flex w-full max-w-full shrink-0 flex-col self-stretch md:w-[calc((100%-2rem)/3)] lg:w-[calc((100%-4rem)/5)]"
                 >
-                  <div
-                    className="aspect-[4/3] bg-cover bg-center"
-                    style={{ backgroundImage: `url(${asset("/media/dish-placeholder.jpg")})` }}
-                    aria-hidden
-                  />
-                  <div className="px-4 py-5 text-center lg:px-5 lg:py-6">
-                    <p className="font-serif text-xl leading-tight lg:text-2xl">{section.title}</p>
-                  </div>
-                </div>
-              </Link>
-            ))}
+                  <Link
+                    href={navHref(cat.href)}
+                    draggable={false}
+                    data-card-visual
+                    className="flex h-full min-h-full w-full max-w-full flex-1 flex-col origin-center overflow-hidden rounded-3xl bg-paper-2 text-center will-change-transform md:origin-center"
+                  >
+                    <img
+                      src={asset(dishPhoto(cover))}
+                      alt={cover ? dishAlt(cover.name) : cat.h1}
+                      className="aspect-[4/3] w-full object-cover"
+                      draggable={false}
+                    />
+                    <div className="flex flex-1 flex-col justify-center px-4 py-4 lg:px-5 lg:py-5">
+                      <p className="font-serif text-xl leading-tight lg:text-2xl">{cat.title}</p>
+                    </div>
+                  </Link>
+                </article>
+              );
+            })}
           </HScroll>
           <Arrow dir="next" onClick={() => goTo(active.current + 1)} />
         </div>

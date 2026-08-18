@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
-export const PAGE_LEAVE_MS = 280;
+export const PAGE_LEAVE_MS = 80;
 
 function reducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;

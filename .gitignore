@@ -4,7 +4,12 @@ node_modules
 out
 .env
 .env*.local
+data
+preview
 tmp-preview
+tmp-clever-dishes.json
+.api-export-tmp
+.pages-build
 assets/*.MOV
 *.log
 **/__pycache__/

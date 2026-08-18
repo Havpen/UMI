@@ -5,10 +5,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
 import { nav, site } from "@/lib/content";
+import { isMenuPath } from "@/lib/menuSection";
 import { normPath } from "@/lib/paths";
 import { track, useBooking } from "./booking";
 import { useCart } from "./cart";
 import { HeaderCartButton, HeaderCartPanel } from "./HeaderCart";
+import { useMenuJump, useMenuView } from "./MenuView";
 import { shouldSoftClick, useSoftNav } from "./softNav";
 
 function BrandMark({ className = "" }: { className?: string }) {
@@ -44,19 +46,35 @@ function BrandMark({ className = "" }: { className?: string }) {
 
 function NavLinks({ onNavigate, className = "" }: { onNavigate?: () => void; className?: string }) {
   const pathname = normPath(usePathname());
+  const jumpMenu = useMenuJump();
+  const section = useMenuView()?.section ?? "";
 
-  return nav.map((item) => (
+  return nav.map((item) => {
+    const active =
+      item.href === "/lunch"
+        ? section === "lunch"
+        : item.href === "/brunch"
+          ? section === "brunch"
+          : item.href === "/menu"
+            ? isMenuPath(pathname) && section !== "lunch" && section !== "brunch"
+            : pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+    return (
     <Link
       key={item.href}
       href={item.href}
-      onClick={onNavigate}
-      className={`shrink-0 whitespace-nowrap ${
-        pathname === item.href || pathname.startsWith(`${item.href}/`) ? "text-ink" : "hover:text-ink"
-      } ${className}`}
+      prefetch
+      onClick={(event) => {
+        onNavigate?.();
+        if (!shouldSoftClick(event)) return;
+        jumpMenu(item.href, event);
+      }}
+      className={`shrink-0 whitespace-nowrap ${active ? "text-ink" : "hover:text-ink"} ${className}`}
     >
       {item.label}
     </Link>
-  ));
+    );
+  });
 }
 
 export function Header() {
@@ -72,6 +90,8 @@ export function Header() {
     router.prefetch("/menu");
     router.prefetch("/lunch");
     router.prefetch("/brunch");
+    router.prefetch("/delivery");
+    router.prefetch("/contacts");
   }, [router]);
 
   useEffect(() => {

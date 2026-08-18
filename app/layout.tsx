@@ -4,6 +4,7 @@ import { BookingProvider } from "@/components/booking";
 import { BookingSheet } from "@/components/BookingSheet";
 import { CartProvider } from "@/components/cart";
 import { FloatingBook, Footer, Header } from "@/components/chrome";
+import { MenuViewProvider } from "@/components/MenuView";
 import { TakeawaySheet } from "@/components/TakeawaySheet";
 import { seo } from "@/lib/content";
 import "./globals.css";
@@ -45,12 +46,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-sans antialiased">
         <BookingProvider>
           <CartProvider>
-            <Header />
-            {children}
-            <Footer />
-            <FloatingBook />
-            <BookingSheet />
-            <TakeawaySheet />
+            <MenuViewProvider>
+              <Header />
+              {children}
+              <Footer />
+              <FloatingBook />
+              <BookingSheet />
+              <TakeawaySheet />
+            </MenuViewProvider>
           </CartProvider>
         </BookingProvider>
       </body>

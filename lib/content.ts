@@ -1,3 +1,5 @@
+import cleverCatalog from "./cleverCatalog.json";
+
 export const site = {
   name: "UMI",
   city: "Гомель",
@@ -69,7 +71,8 @@ export type MenuCategoryId =
   | "salads-poke"
   | "soups"
   | "mains"
-  | "sushi";
+  | "sushi"
+  | "desserts";
 
 export const menuCategories: {
   id: MenuCategoryId;
@@ -82,6 +85,7 @@ export const menuCategories: {
   { id: "soups", href: "/menu/soups", title: "Супы", h1: "Супы" },
   { id: "mains", href: "/menu/mains", title: "Основные", h1: "Основные блюда" },
   { id: "sushi", href: "/menu/sushi", title: "Суши и роллы", h1: "Суши и роллы" },
+  { id: "desserts", href: "/menu/desserts", title: "Десерты", h1: "Десерты" },
 ];
 
 export type Hit = {
@@ -90,35 +94,204 @@ export type Hit = {
   price: string;
   category: MenuCategoryId;
   href: string;
+  image?: string;
+  description?: string;
+  weight?: string;
 };
 
-export const hits: Hit[] = [
-  { id: "vitello-tonnato", name: "Вителло тоннато", price: "25,50", category: "starters", href: "/menu/starters#vitello-tonnato" },
-  { id: "tom-yam", name: "Том ям с морепродуктами", price: "29,00", category: "soups", href: "/menu/soups#tom-yam" },
-  { id: "philadelphia", name: "Филадельфия с авокадо", price: "31,50", category: "sushi", href: "/menu/sushi#philadelphia" },
-  { id: "tagliatelle", name: "Тальятелле с тунцом татаки", price: "24,00", category: "mains", href: "/menu/mains#tagliatelle" },
-  { id: "ramen", name: "Рамен с говядиной", price: "28,50", category: "soups", href: "/menu/soups#ramen" },
-  { id: "striploin", name: "Стейк стриплойн с бельгийским картофелем", price: "60,00", category: "mains", href: "/menu/mains#striploin" },
-  { id: "baked-roll", name: "Запечённый ролл с креветкой и манго", price: "23,50", category: "sushi", href: "/menu/sushi#baked-roll" },
-  { id: "citrus-salad", name: "Салат с креветками в цитрусовой заправке", price: "26,00", category: "salads-poke", href: "/menu/salads-poke#citrus-salad" },
-  { id: "fettuccine", name: "Фетучини с рваной уткой", price: "32,50", category: "mains", href: "/menu/mains#fettuccine" },
-  { id: "tempura", name: "Темпура с карамелизированным лососем", price: "25,00", category: "sushi", href: "/menu/sushi#tempura" },
-  { id: "poke", name: "Поке с лососем", price: "26,50", category: "salads-poke", href: "/menu/salads-poke#poke" },
-  { id: "gyoza", name: "Гёдза со свининой", price: "25,50", category: "starters", href: "/menu/starters#gyoza" },
+type CleverDish = {
+  id: string;
+  name: string;
+  price: string;
+  category: MenuCategoryId;
+  description: string;
+  weight: string;
+  image: string;
+};
+
+const cleverDishes = cleverCatalog as CleverDish[];
+const cleverById = new Map(cleverDishes.map((dish) => [dish.id, dish]));
+
+const hitDefs: { id: string; name: string; price: string; category: MenuCategoryId }[] = [
+  { id: "vitello-tonnato", name: "Вителло тоннато", price: "25,50", category: "starters" },
+  { id: "tom-yam", name: "Том ям с морепродуктами", price: "29,00", category: "soups" },
+  { id: "philadelphia", name: "Филадельфия с авокадо", price: "31,50", category: "sushi" },
+  { id: "tagliatelle", name: "Тальятелле с тунцом татаки", price: "24,00", category: "mains" },
+  { id: "ramen", name: "Рамен с говядиной", price: "28,50", category: "soups" },
+  { id: "striploin", name: "Стейк стриплойн с бельгийским картофелем", price: "60,00", category: "mains" },
+  { id: "baked-roll", name: "Запечённый ролл с креветкой и манго", price: "23,50", category: "sushi" },
+  { id: "citrus-salad", name: "Салат с креветками в цитрусовой заправке", price: "26,00", category: "salads-poke" },
+  { id: "fettuccine", name: "Фетучини с рваной уткой", price: "32,50", category: "mains" },
+  { id: "tempura", name: "Темпура с карамелизированным лососем", price: "25,00", category: "sushi" },
+  { id: "poke", name: "Поке с лососем", price: "26,50", category: "salads-poke" },
+  { id: "gyoza", name: "Гёдза со свининой", price: "25,50", category: "starters" },
 ];
+
+const draftDescriptions: Record<string, string> = {
+  "vitello-tonnato": "Телятина, соус из тунца, каперсы, руккола, сыр «Пармезан»",
+  "tom-yam": "Кокосовый бульон, креветки, кальмар, грибы, лемонграсс, лайм, кинза",
+  "tagliatelle": "Тальятелле, тунец татаки, соус, зелень",
+  "tempura": "Лосось карамелизированный, кляр темпура, соус",
+  "poke": "Рис, лосось, авокадо, огурец, эдамаме, соус поке, кунжут",
+  "gyoza": "Тесто, свинина, капуста, зелёный лук, соус",
+  "salat-s-rostbifom-i-lukom-fri": "Салат, ростбиф, лук фри, соус",
+  "poke-s-bekonom": "Рис, бекон, авокадо, овощи, соус поке, кунжут",
+  "gribnoy-krem-sup-s-kopchyonoy": "Грибы, сливки, копчёное мясо",
+  "roll-s-krevetkoy-lososem-i-avokado-v-tobiko":
+    "Рис, водоросли «Нори», сыр сливочный, креветка, лосось, авокадо, тобико",
+  "roll-v-opalennom-tuntse-s-ogurtsom-i-lososem":
+    "Рис, водоросли «Нори», сыр сливочный, опаленный тунец, огурец, лосось",
+  "roll-s-tuntsom-lososem-i-krevetkoy": "Рис, водоросли «Нори», сыр сливочный, тунец, лосось, креветка",
+  "roll-v-opalennom-morskom-okune-s-mango":
+    "Рис, водоросли «Нори», сыр сливочный, опаленный морской окунь, манго",
+  "roll-v-losose-s-kokosovym-sousom": "Рис, водоросли «Нори», сыр сливочный, лосось, кокосовый соус",
+  "roll-s-lososem-tataki-i-takuanom": "Рис, водоросли «Нори», сыр сливочный, лосось татаки, такуан",
+  "zapechyonnyy-roll-s-bekonom":
+    "Рис, водоросли «Нори», бекон, сливочный сыр, сырная шапка, соус «Унаги», кунжут",
+  "zapechyonnyy-roll-s-opalennym-okunem":
+    "Рис, водоросли «Нори», опаленный окунь, сливочный сыр, сырная шапка, кунжут",
+  "zapechyonnyy-roll-s-tuntsom-i-krevetkoy":
+    "Рис, водоросли «Нори», тунец, креветка, сливочный сыр, сырная шапка, кунжут",
+  "utinaya-nozhka-konfi-s-kartofelnym-pyure": "Утиная ножка конфи, картофельное пюре",
+  "khrustyashchiy-kalmar-v-souse-5-spetsiy": "Кальмар, соус 5 специй",
+  "steyk-file-minon-s-kartofelnym-pyure": "Стейк «Филе-миньон», картофельное пюре",
+  striploin: "Стейк стриплойн, бельгийский картофель",
+  "steyk-iz-lososya-s-brokkoli": "Стейк из лосося, брокколи",
+  "pasta-karbonara": "Паста, бекон, яйцо, сыр «Пармезан»",
+  "spagetti-amatrichana-s-bekonom": "Спагетти, бекон, томатный соус, перец «Чили»",
+  "pasta-talyatelle-s-krevetkami": "Тальятелле, креветки, соус",
+  fettuccine: "Фетучини, рваная утка, соус",
+};
+
+function dishDescription(id: string, clever?: string) {
+  return clever || draftDescriptions[id];
+}
+
+function fromClever(id: string): Pick<Hit, "image" | "description" | "weight"> {
+  const row = cleverById.get(id);
+  return {
+    image: row?.image,
+    description: dishDescription(id, row?.description),
+    weight: row?.weight || undefined,
+  };
+}
+
+export const hits: Hit[] = hitDefs.map((hit) => ({
+  ...hit,
+  href: `/menu/${hit.category}#${hit.id}`,
+  ...fromClever(hit.id),
+}));
+
+const hitIds = new Set(hits.map((hit) => hit.id));
+
+export const dishes: Hit[] = [
+  ...hits,
+  ...cleverDishes
+    .filter((dish) => !hitIds.has(dish.id))
+    .map((dish) => ({
+      id: dish.id,
+      name: dish.name,
+      price: dish.price,
+      category: dish.category,
+      href: `/menu/${dish.category}#${dish.id}`,
+      image: dish.image,
+      description: dishDescription(dish.id, dish.description),
+      weight: dish.weight || undefined,
+    })),
+];
+
+export function dishesInCategory(id: MenuCategoryId) {
+  const featured = hits.filter((hit) => hit.category === id);
+  const rest = dishes.filter((dish) => dish.category === id && !hitIds.has(dish.id));
+  return [...featured, ...rest];
+}
+
+export function dishById(id: string) {
+  return dishes.find((dish) => dish.id === id);
+}
+
+export function dishPhoto(dish?: Pick<Hit, "image"> | null) {
+  return dish?.image ?? "/media/dish-placeholder.jpg";
+}
+
+export function dishAlt(name: string) {
+  return `${name} — ресторан UMI Гомель`;
+}
+
+export function categoryCover(id: MenuCategoryId) {
+  return dishesInCategory(id).find((dish) => dish.image);
+}
 
 export const interiors = [
   {
-    src: "/media/interior/img_3543.jpg",
-    alt: "Зал ресторана UMI в Гомеле — посадка у окон",
+    src: "/media/interior/umi-16.jpg",
+    alt: "Стойка UMI и стеклянная панель с логотипом",
+    title: "Наш бар",
+    caption: "Стойка встречает у входа. За стеклом — свет и знак UMI.",
+    layout: "hero",
   },
   {
-    src: "/media/interior/img_3544.jpg",
-    alt: "Угол зала UMI — диван и декоративные рыбы на стене",
+    src: "/media/interior/umi-02.jpg",
+    alt: "Основной зал UMI — посадка и свет из окон",
+    title: "Основной зал",
+    caption: "Один светлый зал на всю посадку. Столы, окна и спокойный ритм вечера.",
+    layout: "wide",
   },
   {
-    src: "/media/interior/img_3545.jpg",
-    alt: "Посадка в зале UMI — кресла, столы, светильник",
+    src: "/media/interior/umi-03.jpg",
+    alt: "Угол зала у окна — зелёные кресла и живая стена",
+    title: "Угол у окна",
+    caption: "Тихий закуток с креслами и растениями — для двоих или небольшой компании.",
+    layout: "tall",
+  },
+  {
+    src: "/media/interior/umi-14.jpg",
+    alt: "Посадка у окон в зале UMI",
+    title: "У окон",
+    caption: "Подиум к улице: деревья за стеклом и чуть отделённая посадка.",
+    layout: "wide",
+  },
+  {
+    src: "/media/interior/umi-08.jpg",
+    alt: "Закуток UMI — диван и растения",
+    title: "Закуток",
+    caption: "Мягкий угол чуть в стороне: диван, зелень и меньше сквозного движения.",
+    layout: "tall",
+  },
+  {
+    src: "/media/interior/umi-10.jpg",
+    alt: "Зал и частично открытая кухня UMI",
+    title: "Открытая кухня",
+    caption: "Кухня не спрятана за дверью — видно, как собирают тарелку.",
+    layout: "tall",
+  },
+  {
+    src: "/media/interior/umi-15.jpg",
+    alt: "Деревянный потолок и светильники в зале UMI",
+    title: "Свет",
+    caption: "Деревянные рейки и чёрные светильники — тихий каркас потолка.",
+    layout: "tall",
+  },
+  {
+    src: "/media/interior/umi-04.jpg",
+    alt: "Посадка в зале UMI — рыбы на стене и жёлтый диван",
+    title: "Рыбы на стене",
+    caption: "Жёлтый диван и декоративные рыбы — самый узнаваемый угол зала.",
+    layout: "normal",
+  },
+  {
+    src: "/media/interior/umi-07.jpg",
+    alt: "Столы у декоративных рыб в зале UMI",
+    title: "Посадка в зале",
+    caption: "Столы напротив стены с рыбами. Тот же зал, ближе к декору.",
+    layout: "normal",
+  },
+  {
+    src: "/media/interior/umi-11.jpg",
+    alt: "Подиум у окон — столы и растения",
+    title: "Подиум",
+    caption: "На ступеньку выше: стекло, растения и свет из высоких окон.",
+    layout: "end",
   },
 ] as const;
 
@@ -131,7 +304,7 @@ export const seo = {
   "/menu": {
     title: "Меню ресторана UMI в Гомеле",
     description:
-      "Стартеры, салаты и поке, супы, вок и паста, суши и роллы. Азия и Европа в одном меню.",
+      "Стартеры, салаты и поке, супы, вок и паста, суши и роллы, десерты. Азия и Европа в одном меню.",
   },
   "/menu/starters": {
     title: "Закуски и стартеры — UMI Гомель",
@@ -156,6 +329,10 @@ export const seo = {
     title: "Суши и роллы — UMI Гомель",
     description:
       "Филадельфия с авокадо, запечённый ролл с креветкой и манго, темпура с лососем. Нигири и роллы в UMI.",
+  },
+  "/menu/desserts": {
+    title: "Десерты — ресторан UMI Гомель",
+    description: "Десерты к столу в зале UMI. Забронировать стол в центре Гомеля.",
   },
   "/lunch": {
     title: "Бизнес-ланч в Гомеле — UMI",

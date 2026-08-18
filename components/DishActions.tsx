@@ -18,14 +18,15 @@ export function DishActions({
     return (
       <button
         type="button"
-        className="flex w-full items-center justify-center rounded-full bg-ink px-4 py-2.5 text-sm text-paper"
+        className="dish-card-add"
         onClick={(event) => {
           event.preventDefault();
           event.stopPropagation();
           add({ id, name, price });
         }}
       >
-        Добавить +
+        <span>Добавить</span>
+        <span aria-hidden>+</span>
       </button>
     );
   }
@@ -33,6 +34,7 @@ export function DishActions({
   return (
     <div
       className="flex w-full items-center justify-between rounded-full bg-paper px-1 py-1 text-sm"
+      data-qty
       onClick={(event) => event.stopPropagation()}
     >
       <button

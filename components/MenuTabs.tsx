@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useEffect, useRef } from "react";
 import { HScroll } from "./HScroll";
 import { menuCategories } from "@/lib/content";
 import { navHref } from "@/lib/paths";
@@ -20,36 +21,63 @@ const tabs = [
 
 export function MenuTabs({
   current,
-  takeaway = false,
   onSelect,
 }: {
   current?: string;
-  takeaway?: boolean;
   onSelect?: (id: string, href: string) => void;
 }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const updateFade = useCallback(() => {
+    const wrap = wrapRef.current;
+    const node = scrollRef.current;
+    if (!wrap || !node) return;
+    const max = node.scrollWidth - node.clientWidth;
+    wrap.classList.toggle("is-fade-start", node.scrollLeft > 1);
+    wrap.classList.toggle("is-fade-end", max > 1 && node.scrollLeft < max - 1);
+  }, []);
+
+  useEffect(() => {
+    const node = scrollRef.current;
+    if (!node) return;
+    updateFade();
+    node.addEventListener("scroll", updateFade, { passive: true });
+    const observer = new ResizeObserver(updateFade);
+    observer.observe(node);
+    if (node.firstElementChild) observer.observe(node.firstElementChild);
+    document.fonts?.ready.then(updateFade);
+    return () => {
+      node.removeEventListener("scroll", updateFade);
+      observer.disconnect();
+    };
+  }, [updateFade]);
+
   return (
-    <HScroll>
-      <div className="flex w-max min-w-full gap-3 py-1 md:gap-4">
-        {tabs.map((tab) => (
-          <Link
-            key={tab.id}
-            href={takeaway ? navHref(`${tab.href}?mode=takeaway`) : navHref(tab.href)}
-            prefetch
-            draggable={false}
-            className={tabClass(current ? current === tab.id : tab.id === "hits")}
-            onClick={(event) => {
-              if (!onSelect) return;
-              if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
-                return;
-              }
-              event.preventDefault();
-              onSelect(tab.id, tab.href);
-            }}
-          >
-            {tab.label}
-          </Link>
-        ))}
-      </div>
-    </HScroll>
+    <div ref={wrapRef} className="menu-ribbon">
+      <HScroll ref={scrollRef}>
+        <div className="flex w-max min-w-full gap-3 py-1 md:gap-4">
+          {tabs.map((tab) => (
+            <Link
+              key={tab.id}
+              href={navHref(tab.href)}
+              prefetch
+              draggable={false}
+              className={tabClass(current ? current === tab.id : tab.id === "hits")}
+              onClick={(event) => {
+                if (!onSelect) return;
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+                  return;
+                }
+                event.preventDefault();
+                onSelect(tab.id, tab.href);
+              }}
+            >
+              {tab.label}
+            </Link>
+          ))}
+        </div>
+      </HScroll>
+    </div>
   );
 }

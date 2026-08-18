@@ -28,11 +28,7 @@ jobs:
         env:
           GITHUB_PAGES: "true"
           NEXT_PUBLIC_SITE_URL: https://havpen.github.io/UMI
-        run: |
-          mv app/api /tmp/umi-api
-          npm run build
-          mv /tmp/umi-api app/api
-          touch out/.nojekyll
+        run: npm run export:pages
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out

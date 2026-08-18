@@ -1,0 +1,362 @@
+[
+  {
+    "id": "salat-s-rostbifom-i-lukom-fri",
+    "name": "Салат с ростбифом и луком фри",
+    "price": "32,00",
+    "category": "salads-poke",
+    "description": "",
+    "weight": "230 г",
+    "image": "/media/dishes/salat-s-rostbifom-i-lukom-fri.jpg"
+  },
+  {
+    "id": "citrus-salad",
+    "name": "Салат с креветкой в цитрусовой заправкой",
+    "price": "31,70",
+    "category": "salads-poke",
+    "description": "Салат «Айсберг», шпинат, помидоры «Черри», апельсин, персик консервированный, креветки, соус «Сладкий чили», соус «Цитрусовый», сыр «Пармезан»",
+    "weight": "250 г",
+    "image": "/media/dishes/citrus-salad.jpg"
+  },
+  {
+    "id": "salat-nisuaz-s-tuntsom",
+    "name": "Салат «Нисуаз» с тунцом",
+    "price": "28,80",
+    "category": "salads-poke",
+    "description": "Салат «Айсберг», помидоры «Черри», фасоль стручковая, картофель, тунец, яйцо перепелиное, заправка «Нисуаз», кинза",
+    "weight": "260 г",
+    "image": "/media/dishes/salat-nisuaz-s-tuntsom.jpg"
+  },
+  {
+    "id": "salat-s-tsyplyonkom-i-khrustyashchey-yaichnoy-lapshoy",
+    "name": "Салат с цыплёнком и хрустящей яичной лапшой",
+    "price": "27,60",
+    "category": "salads-poke",
+    "description": "Салат «Айсберг», помидоры «Черри», шпинат, яичная лапша, филе цыплёнка, соус «Майонезный», яйцо перепелиное",
+    "weight": "210 г",
+    "image": "/media/dishes/salat-s-tsyplyonkom-i-khrustyashchey-yaichnoy-lapshoy.jpg"
+  },
+  {
+    "id": "poke-s-bekonom",
+    "name": "Поке с беконом",
+    "price": "28,00",
+    "category": "salads-poke",
+    "description": "",
+    "weight": "220 г",
+    "image": "/media/dishes/poke-s-bekonom.jpg"
+  },
+  {
+    "id": "gribnoy-krem-sup-s-kopchyonoy",
+    "name": "Грибной крем-суп с копчёной",
+    "price": "32,00",
+    "category": "soups",
+    "description": "",
+    "weight": "400 г",
+    "image": "/media/dishes/gribnoy-krem-sup-s-kopchyonoy.jpg"
+  },
+  {
+    "id": "ramen",
+    "name": "Рамен с говядиной",
+    "price": "34,80",
+    "category": "soups",
+    "description": "Бульон «Рамен», яичная лапша, грибы «Шиитаке», кукуруза, зелёный лук, куриное яйцо, говядина, водоросли «Нори», кунжут",
+    "weight": "460 г",
+    "image": "/media/dishes/ramen.jpg"
+  },
+  {
+    "id": "lapsha-pad-tay-s-krevetkami",
+    "name": "Лапша «Пад тай» с креветками",
+    "price": "33,60",
+    "category": "mains",
+    "description": "Рисовая лапша, куриное яйцо, лук-порей, перец сладкий, ростки сои, лук, креветки, соус «Пад тай», кинза, арахис",
+    "weight": "310 г",
+    "image": "/media/dishes/lapsha-pad-tay-s-krevetkami.jpg"
+  },
+  {
+    "id": "soba-s-govyadinoy-v-perechnom-souse",
+    "name": "Соба с говядиной в перечном соусе",
+    "price": "36,00",
+    "category": "mains",
+    "description": "Соба, говядина, куриное яйцо, беби-морковь, грибы «Шиитаке», лук-порей, зелёный лук, соус «Сливочно-перечный», арахис",
+    "weight": "350 г",
+    "image": "/media/dishes/soba-s-govyadinoy-v-perechnom-souse.jpg"
+  },
+  {
+    "id": "yaichnaya-lapsha-s-tsyplyonkom",
+    "name": "Яичная лапша с цыплёнком",
+    "price": "27,50",
+    "category": "mains",
+    "description": "Яичная лапша, куриное яйцо, беби-морковь, перец сладкий, лук-порей, филе цыплёнка, соус «Кисло-сладкий», арахис, кунжут",
+    "weight": "330 г",
+    "image": "/media/dishes/yaichnaya-lapsha-s-tsyplyonkom.jpg"
+  },
+  {
+    "id": "risovaya-lapsha-s-tsyplyonkom",
+    "name": "Рисовая лапша с цыплёнком",
+    "price": "28,70",
+    "category": "mains",
+    "description": "Рисовая лапша, филе цыплёнка, куриное яйцо, беби-морковь, лук-порей, кукуруза, соус «Сингапурский», кунжут",
+    "weight": "350 г",
+    "image": "/media/dishes/risovaya-lapsha-s-tsyplyonkom.jpg"
+  },
+  {
+    "id": "roll-s-karamelizirovannym-lososem",
+    "name": "Ролл с карамелизированным лососем",
+    "price": "32,30",
+    "category": "sushi",
+    "description": "Рис, водоросли «Нори», сыр сливочный, лосось карамелизированный, авокадо, стружка тунца, соус «Терияки»",
+    "weight": "220 г",
+    "image": "/media/dishes/roll-s-karamelizirovannym-lososem.jpg"
+  },
+  {
+    "id": "roll-s-krevetkoy-lososem-i-avokado-v-tobiko",
+    "name": "Ролл с креветкой, лососем и авокадо в тобико",
+    "price": "40,80",
+    "category": "sushi",
+    "description": "",
+    "weight": "",
+    "image": "/media/dishes/roll-s-krevetkoy-lososem-i-avokado-v-tobiko.jpg"
+  },
+  {
+    "id": "roll-v-opalennom-tuntse-s-ogurtsom-i-lososem",
+    "name": "Ролл в опаленном тунце с огурцом и лососем",
+    "price": "32,30",
+    "category": "sushi",
+    "description": "",
+    "weight": "215 г",
+    "image": "/media/dishes/roll-v-opalennom-tuntse-s-ogurtsom-i-lososem.jpg"
+  },
+  {
+    "id": "roll-s-tuntsom-lososem-i-krevetkoy",
+    "name": "Ролл с тунцом, лососем и креветкой",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "",
+    "weight": "170 г",
+    "image": "/media/dishes/roll-s-tuntsom-lososem-i-krevetkoy.jpg"
+  },
+  {
+    "id": "roll-v-opalennom-morskom-okune-s-mango",
+    "name": "Ролл в опаленном морском окуне с манго",
+    "price": "31,00",
+    "category": "sushi",
+    "description": "",
+    "weight": "220 г",
+    "image": "/media/dishes/roll-v-opalennom-morskom-okune-s-mango.jpg"
+  },
+  {
+    "id": "roll-v-losose-s-kokosovym-sousom",
+    "name": "Ролл в лососе с кокосовым соусом",
+    "price": "33,50",
+    "category": "sushi",
+    "description": "",
+    "weight": "",
+    "image": "/media/dishes/roll-v-losose-s-kokosovym-sousom.jpg"
+  },
+  {
+    "id": "roll-s-lososem-tataki-i-takuanom",
+    "name": "Ролл с лососем татаки и такуаном",
+    "price": "28,00",
+    "category": "sushi",
+    "description": "",
+    "weight": "210 г",
+    "image": "/media/dishes/roll-s-lososem-tataki-i-takuanom.jpg"
+  },
+  {
+    "id": "philadelphia",
+    "name": "Ролл «Филадельфия» с авокадо и икрой",
+    "price": "36,60",
+    "category": "sushi",
+    "description": "Рис, водоросли нори, сыр сливочный, авокадо, лосось, лососёвая икра",
+    "weight": "240 г",
+    "image": "/media/dishes/philadelphia.jpg"
+  },
+  {
+    "id": "roll-s-krevetkoy-tempura-v-losose",
+    "name": "Ролл с креветкой темпура в лососе",
+    "price": "34,00",
+    "category": "sushi",
+    "description": "Рис, водоросли нори, креветка темпура, авокадо, соус «Спайси», лосось, соус «Унаги», соус «Сладкий чили», икра лососёвая, кунжут",
+    "weight": "280 г",
+    "image": "/media/dishes/roll-s-krevetkoy-tempura-v-losose.jpg"
+  },
+  {
+    "id": "zapechyonnyy-roll-filadelfiya",
+    "name": "Запечённый ролл «Филадельфия»",
+    "price": "36,60",
+    "category": "sushi",
+    "description": "Рис, водоросли «Нори», лосось, сливочный сыр, огурец, сырная шапка, соус «Унаги», кунжут",
+    "weight": "370 г",
+    "image": "/media/dishes/zapechyonnyy-roll-filadelfiya.jpg"
+  },
+  {
+    "id": "baked-roll",
+    "name": "Запечённый ролл с креветкой и манго",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "Рис, водоросли «Нори», сливочный сыр, сырная шапка, кунжут, креветки, манго, соус «Терияки», соус «Сладкий чили»",
+    "weight": "330 г",
+    "image": "/media/dishes/baked-roll.jpg"
+  },
+  {
+    "id": "zapechyonnyy-roll-s-lososem-i-avokado",
+    "name": "Запечённый ролл с лососем и авокадо",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "Рис, водоросли «Нори», авокадо, сливочный сыр, лосось, сырная шапка, соус «Унаги», соус «Спайси», кунжут",
+    "weight": "340 г",
+    "image": "/media/dishes/zapechyonnyy-roll-s-lososem-i-avokado.jpg"
+  },
+  {
+    "id": "zapechyonnyy-roll-s-bekonom",
+    "name": "Запечённый ролл с беконом",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "",
+    "weight": "270 г",
+    "image": "/media/dishes/zapechyonnyy-roll-s-bekonom.jpg"
+  },
+  {
+    "id": "zapechyonnyy-roll-s-opalennym-okunem",
+    "name": "Запечённый ролл с опаленным окунем",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "",
+    "weight": "240 г",
+    "image": "/media/dishes/zapechyonnyy-roll-s-opalennym-okunem.jpg"
+  },
+  {
+    "id": "zapechyonnyy-roll-s-tuntsom-i-krevetkoy",
+    "name": "Запечённый ролл с тунцом и креветкой",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "",
+    "weight": "310 г",
+    "image": "/media/dishes/zapechyonnyy-roll-s-tuntsom-i-krevetkoy.jpg"
+  },
+  {
+    "id": "zapechennyy-roll-s-lososem-i-takuanom",
+    "name": "Запечённый ролл с лососем и такуаном",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "Рис, водоросли нори, такуан, сыр, лосось, сырная шапка, соус «Спайси», трюфельные айоли, кунжут",
+    "weight": "300 г",
+    "image": "/media/dishes/zapechennyy-roll-s-lososem-i-takuanom.jpg"
+  },
+  {
+    "id": "kung-pao-s-risom",
+    "name": "Кунг Пао с рисом",
+    "price": "27,50",
+    "category": "mains",
+    "description": "Филе цыплёнка, японский рис, арахис, зелёный лук, перец «Чили», соус «Кунг пао», кунжутный микс",
+    "weight": "",
+    "image": "/media/dishes/kung-pao-s-risom.jpg"
+  },
+  {
+    "id": "khrustyashchaya-struchkovaya-fasol-s-tsyplyonkom",
+    "name": "Хрустящая стручковая фасоль с цыплёнком",
+    "price": "25,00",
+    "category": "mains",
+    "description": "Фасоль стручковая, филе цыплёнка, крахмал, соус «Остро-сладкий», перец «Чили», кунжут",
+    "weight": "280 г",
+    "image": "/media/dishes/khrustyashchaya-struchkovaya-fasol-s-tsyplyonkom.jpg"
+  },
+  {
+    "id": "utinaya-nozhka-konfi-s-kartofelnym-pyure",
+    "name": "Утиная ножка конфи с картофельным пюре",
+    "price": "36,60",
+    "category": "mains",
+    "description": "",
+    "weight": "280 г",
+    "image": "/media/dishes/utinaya-nozhka-konfi-s-kartofelnym-pyure.jpg"
+  },
+  {
+    "id": "khrustyashchiy-kalmar-v-souse-5-spetsiy",
+    "name": "Хрустящий кальмар в соусе 5 специй",
+    "price": "25,00",
+    "category": "mains",
+    "description": "",
+    "weight": "150 г",
+    "image": "/media/dishes/khrustyashchiy-kalmar-v-souse-5-spetsiy.jpg"
+  },
+  {
+    "id": "steyk-file-minon-s-kartofelnym-pyure",
+    "name": "Стейк «Филе-миньон» с картофельным пюре",
+    "price": "59,00",
+    "category": "mains",
+    "description": "",
+    "weight": "300 г",
+    "image": "/media/dishes/steyk-file-minon-s-kartofelnym-pyure.jpg"
+  },
+  {
+    "id": "striploin",
+    "name": "Стейк «Стриплойн» с бельгийским картофелем",
+    "price": "72,00",
+    "category": "mains",
+    "description": "",
+    "weight": "400 г",
+    "image": "/media/dishes/striploin.jpg"
+  },
+  {
+    "id": "steyk-iz-lososya-s-brokkoli",
+    "name": "Стейк из лосося с брокколи",
+    "price": "63,00",
+    "category": "mains",
+    "description": "",
+    "weight": "300 г",
+    "image": "/media/dishes/steyk-iz-lososya-s-brokkoli.jpg"
+  },
+  {
+    "id": "bezglyatenovyy-shokoladnyy-pirog",
+    "name": "Безглютеновый шоколадный пирог",
+    "price": "24,00",
+    "category": "desserts",
+    "description": "Яйца, шоколад молочный, шоколад тёмный, сахар, масло сливочное",
+    "weight": "120 г",
+    "image": "/media/dishes/bezglyatenovyy-shokoladnyy-pirog.jpg"
+  },
+  {
+    "id": "tort-morkovnyy",
+    "name": "Торт «Морковный»",
+    "price": "15,00",
+    "category": "desserts",
+    "description": "Сахар, сыр сливочный, мука, масло растительное, морковь, орех грецкий, семена тыквы, масло какао, молоко, крахмал",
+    "weight": "110 г",
+    "image": "/media/dishes/tort-morkovnyy.jpg"
+  },
+  {
+    "id": "pasta-karbonara",
+    "name": "Паста «Карбонара»",
+    "price": "21,40",
+    "category": "mains",
+    "description": "",
+    "weight": "250 г",
+    "image": "/media/dishes/pasta-karbonara.jpg"
+  },
+  {
+    "id": "spagetti-amatrichana-s-bekonom",
+    "name": "Спагетти «Аматричана» с беконом",
+    "price": "27,50",
+    "category": "mains",
+    "description": "",
+    "weight": "300 г",
+    "image": "/media/dishes/spagetti-amatrichana-s-bekonom.jpg"
+  },
+  {
+    "id": "pasta-talyatelle-s-krevetkami",
+    "name": "Паста «Тальятелле» с креветками",
+    "price": "33,00",
+    "category": "mains",
+    "description": "",
+    "weight": "350 г",
+    "image": "/media/dishes/pasta-talyatelle-s-krevetkami.jpg"
+  },
+  {
+    "id": "fettuccine",
+    "name": "Паста «Фетучини» с рваной уткой",
+    "price": "39,60",
+    "category": "mains",
+    "description": "",
+    "weight": "320 г",
+    "image": "/media/dishes/fettuccine.jpg"
+  }
+]

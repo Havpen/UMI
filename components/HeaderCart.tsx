@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
-import { site } from "@/lib/content";
+import { dishAlt, dishById, dishPhoto, site } from "@/lib/content";
 import { track, useBooking } from "./booking";
 import { Price } from "./BynSign";
 import { useCart } from "./cart";
@@ -119,8 +119,8 @@ export function HeaderCartPanel() {
             {items.map((item) => (
               <img
                 key={item.id}
-                src={asset("/media/dish-placeholder.jpg")}
-                alt={item.name}
+                src={asset(dishPhoto(dishById(item.id)))}
+                alt={dishAlt(item.name)}
                 className="h-14 w-14 shrink-0 rounded-xl object-cover"
               />
             ))}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { asset } from "@/lib/asset";
 import { brunch, lunch } from "@/lib/content";
+import { navHref } from "@/lib/paths";
 import { AggregatorLinks } from "./AggregatorLinks";
 
 export function Aggregators() {
@@ -13,7 +14,7 @@ export function Aggregators() {
         </p>
         <AggregatorLinks />
         <Link
-          href="/menu?mode=takeaway"
+          href={navHref("/menu")}
           className="hover-grow mt-8 inline-block rounded-full bg-ink px-5 py-3 text-paper"
         >
           Собрать заказ на вынос

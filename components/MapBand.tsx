@@ -88,7 +88,7 @@ export function MapBand({
               autoFitToViewport: "always",
             },
           );
-          map.controls.get("zoomControl")?.options.set("position", { right: 12, bottom: 24 });
+          map.controls.get("zoomControl")?.options.set("position", { right: 12, bottom: 48 });
           const ground = map.panes.get("ground")?.getElement();
           if (ground) {
             ground.style.filter = "grayscale(1) contrast(0.92) brightness(1.1)";
@@ -152,9 +152,9 @@ export function MapBand({
           fill ? "min-h-[min(58vh,520px)] flex-1" : "h-[min(72vh,620px)]"
         }`}
       >
-        <div ref={mapRef} className="absolute inset-x-0 top-0 h-[calc(100%+52px)] w-full" />
+        <div ref={mapRef} className="absolute inset-0 h-full w-full" />
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-36 bg-gradient-to-b from-paper via-paper/75 to-transparent" />
-        <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2">
+        <div className="absolute bottom-14 left-1/2 z-10 -translate-x-1/2">
           <a
             href={routeHref}
             target="_blank"
