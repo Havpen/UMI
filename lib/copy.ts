@@ -48,6 +48,15 @@ const ru = {
   findUs: "Как найти",
   route: "Маршрут",
   contactsTitle: "Контакты",
+  privacyLink: "Политика обработки персональных данных",
+  privacyLinkShort: "Политике",
+  privacySite: "Сайт",
+  consentPdBooking: "Я соглашаюсь на обработку персональных данных в целях заявки на бронь стола согласно",
+  consentPdTakeaway: "Я соглашаюсь на обработку персональных данных в целях заявки на вынос согласно",
+  consentTelegramBefore:
+    "Я соглашаюсь на передачу данных заявки в Telegram за пределы Республики Беларусь и проинформирован(а) о рисках, указанных в",
+  consentTelegramAfter: "Без этого согласия заявку с сайта отправить нельзя.",
+  consentNeed: "Чтобы отправить заявку, отметьте оба согласия.",
   noParking: "Парковки нет.",
   deliveryTitle: "Заказ с собой",
   deliveryLead:
@@ -147,6 +156,11 @@ const ru = {
       description:
         "Ресторан UMI: ул. Кирова, 35, Гомель. Телефон +375 29 308-55-56. Часы работы, Instagram umi_gomel.",
     },
+    "/privacy": {
+      title: "Политика персональных данных — UMI Гомель",
+      description:
+        "Как ресторан UMI обрабатывает заявки на бронь и вынос, передача в Telegram и файлы cookie.",
+    },
   },
   err: {
     commentLong: "Комментарий слишком длинный",
@@ -208,6 +222,15 @@ const en: typeof ru = {
   findUs: "How to find us",
   route: "Directions",
   contactsTitle: "Contacts",
+  privacyLink: "Personal data processing policy",
+  privacyLinkShort: "the Policy",
+  privacySite: "Website",
+  consentPdBooking: "I agree to the processing of personal data for a table request under",
+  consentPdTakeaway: "I agree to the processing of personal data for a takeaway request under",
+  consentTelegramBefore:
+    "I agree to transfer the request data via Telegram outside Belarus and I have been informed of the risks in",
+  consentTelegramAfter: "Without this consent a request cannot be sent from the site.",
+  consentNeed: "Tick both consents to send the request.",
   noParking: "No parking.",
   deliveryTitle: "Takeaway",
   deliveryLead:
@@ -305,6 +328,10 @@ const en: typeof ru = {
       title: "UMI contacts — Gomel, 35 Kirova St.",
       description:
         "UMI restaurant: 35 Kirova St., Gomel. Phone +375 29 308-55-56. Opening hours, Instagram umi_gomel.",
+    },
+    "/privacy": {
+      title: "Personal data policy — UMI Gomel",
+      description: "How restaurant UMI handles table and takeaway requests, Telegram transfer and cookies.",
     },
   },
   err: {

@@ -6,10 +6,10 @@ import { dishPhoto, type Hit } from "@/lib/content";
 import { localizeCategory, localizeDish, useCopy } from "@/lib/i18n";
 import { useLocale } from "@/lib/locale";
 import { pickMenuHits } from "@/lib/menuHits";
-import { asset } from "@/lib/asset";
 import { DishActions } from "./DishActions";
 import { useMenuView } from "./MenuView";
 import { MenuPageHeader } from "./MenuPageHeader";
+import { Photo } from "./Photo";
 import { Price } from "./BynSign";
 
 function DishCard({
@@ -64,7 +64,7 @@ function DishCard({
     >
       <article id={hit.id} className="dish-card-face">
         <div className="dish-card-shot">
-          <img src={asset(dishPhoto(hit))} alt={`${dish.name}${t.dishAltSuffix}`} draggable={false} loading="lazy" decoding="async" />
+          <Photo src={dishPhoto(hit)} alt={`${dish.name}${t.dishAltSuffix}`} draggable={false} loading="lazy" decoding="async" />
         </div>
         <div className="dish-card-copy">
           <p className="dish-card-name font-serif leading-tight md:text-xl">{dish.name}</p>

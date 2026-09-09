@@ -92,6 +92,24 @@ export async function compressDishJpeg(input: Buffer, destJpg: string) {
       "3",
       destJpg,
     ]);
+    await runFfmpeg([
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-nostdin",
+      "-y",
+      "-i",
+      src,
+      "-frames:v",
+      "1",
+      "-vf",
+      "scale='min(1600,iw)':'min(1600,ih)':force_original_aspect_ratio=decrease",
+      "-c:v",
+      "libwebp",
+      "-quality",
+      "90",
+      destJpg.replace(/\.jpe?g$/i, ".webp"),
+    ]);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }

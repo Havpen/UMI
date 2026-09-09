@@ -2,17 +2,19 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { asset } from "@/lib/asset";
 import { dishPhoto, minskNow, todayHallHours } from "@/lib/content";
 import { isHoneypot, sanitizePhoneInput, validateCommentField, validateTakeawayName, validatePhone } from "@/lib/commentModeration";
 import { dishName, fieldMessage, useCopy } from "@/lib/i18n";
 import { useLocale } from "@/lib/locale";
 import { navHref } from "@/lib/paths";
 import { isStaticHost } from "@/lib/staticHost";
+import { POLICY_REVISION } from "@/lib/legal";
 import { track } from "./booking";
 import { Price } from "./BynSign";
 import { CallButton } from "./CallButton";
+import { ConsentFields } from "./ConsentFields";
 import { useCart } from "./cart";
+import { Photo } from "./Photo";
 import { SheetShell } from "./SheetShell";
 import { TimeField } from "./TimeField";
 
@@ -50,12 +52,16 @@ export function TakeawaySheet() {
   const [error, setError] = useState("");
   const [mounted, setMounted] = useState(checkoutOpen);
   const [visible, setVisible] = useState(false);
+  const [consentPd, setConsentPd] = useState(false);
+  const [consentTg, setConsentTg] = useState(false);
   const bounds = useMemo(() => pickupBounds(), [checkoutOpen]);
 
   useEffect(() => {
     if (checkoutOpen) {
       setSent(false);
       setError("");
+      setConsentPd(false);
+      setConsentTg(false);
       setMounted(true);
       const id = requestAnimationFrame(() => {
         requestAnimationFrame(() => setVisible(true));
@@ -103,6 +109,10 @@ export function TakeawaySheet() {
       setError(fieldMessage(commentError, t, t.sendFailTakeaway));
       return;
     }
+    if (!consentPd || !consentTg) {
+      setError(t.consentNeed);
+      return;
+    }
     const payload = {
       name: String(data.get("guestName") ?? "").trim(),
       phone: data.get("phone"),
@@ -112,6 +122,9 @@ export function TakeawaySheet() {
       website: data.get("website"),
       items,
       sum: sumLabel,
+      consentPd: true,
+      consentTg: true,
+      policyRevision: POLICY_REVISION,
     };
     if (isStaticHost) {
       setError(t.sendFailTakeaway);
@@ -166,8 +179,8 @@ export function TakeawaySheet() {
                 return (
                 <div key={item.id} className="min-w-0">
                   <div className="relative aspect-square overflow-hidden rounded-xl">
-                    <img
-                      src={asset(dishPhoto(item))}
+                    <Photo
+                      src={dishPhoto(item)}
                       alt={`${name}${t.dishAltSuffix}`}
                       className="h-full w-full object-cover"
                       loading="lazy"
@@ -277,9 +290,18 @@ export function TakeawaySheet() {
                   {t.pickupLine(t.addressFull, bounds.open, todayHallHours().close)}
                 </p>
                 {error ? <p className="text-sm">{error}</p> : null}
+                {isStaticHost ? null : (
+                  <ConsentFields
+                    purpose="takeaway"
+                    pd={consentPd}
+                    tg={consentTg}
+                    onPd={setConsentPd}
+                    onTg={setConsentTg}
+                  />
+                )}
                 <CallButton />
                 {isStaticHost ? null : (
-                  <button type="submit" disabled={items.length === 0} className="rounded-full bg-ink py-3 text-paper disabled:opacity-40">
+                  <button type="submit" disabled={items.length === 0 || !consentPd || !consentTg} className="rounded-full bg-ink py-3 text-paper disabled:opacity-40">
                     {t.send}
                   </button>
                 )}

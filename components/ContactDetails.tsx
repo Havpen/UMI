@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { site } from "@/lib/content";
 import { useCopy, useHours } from "@/lib/i18n";
+import { navHref } from "@/lib/paths";
 import { track } from "./booking";
 
 export function ContactDetails() {
@@ -39,6 +41,12 @@ export function ContactDetails() {
             ))}
           </tbody>
         </table>
+        <Link
+          href={navHref("/privacy")}
+          className="mt-8 inline-block underline decoration-ink/25 underline-offset-[0.35em]"
+        >
+          {t.privacyLink}
+        </Link>
       </div>
     </section>
   );

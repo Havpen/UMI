@@ -673,7 +673,7 @@ html[data-theme="dark"] .hero-logo {
   overflow: hidden;
   border-radius: 1.5rem;
   appearance: none;
-  background: none;
+  background: var(--color-paper-2);
   cursor: zoom-in;
 }
 

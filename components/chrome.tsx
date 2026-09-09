@@ -7,7 +7,7 @@ import { asset } from "@/lib/asset";
 import { nav, site } from "@/lib/content";
 import { useCopy } from "@/lib/i18n";
 import { isMenuPath } from "@/lib/menuSection";
-import { isAdminPath, normPath } from "@/lib/paths";
+import { isAdminPath, navHref, normPath } from "@/lib/paths";
 import { track, useBooking } from "./booking";
 import { useCart } from "./cart";
 import { HeaderCartButton, HeaderCartPanel } from "./HeaderCart";
@@ -249,19 +249,29 @@ export function Header() {
 export function Footer() {
   const pathname = normPath(usePathname());
   const t = useCopy();
-  if (isAdminPath(pathname) || pathname === "/" || pathname === "/contacts") return null;
+  if (isAdminPath(pathname) || pathname === "/privacy") return null;
+  const compact = pathname === "/" || pathname === "/contacts";
 
   return (
     <footer className="mt-auto shrink-0 px-4 py-3 text-center">
-      <Link href="/" className="font-sans text-sm tracking-[0.22em] text-ink">
-        UMI
-      </Link>
-      <p className="mt-1 text-xs text-ink-soft">
-        {t.addressFull}
-        {" · "}
-        <a href={site.phoneHref} onClick={() => track("click_phone")}>
-          {site.phone}
-        </a>
+      {compact ? null : (
+        <>
+          <Link href="/" className="font-sans text-sm tracking-[0.22em] text-ink">
+            UMI
+          </Link>
+          <p className="mt-1 text-xs text-ink-soft">
+            {t.addressFull}
+            {" · "}
+            <a href={site.phoneHref} onClick={() => track("click_phone")}>
+              {site.phone}
+            </a>
+          </p>
+        </>
+      )}
+      <p className={`${compact ? "" : "mt-2"} text-xs text-ink-soft`}>
+        <Link href={navHref("/privacy")} className="underline decoration-ink/25 underline-offset-[0.35em]">
+          {t.privacyLink}
+        </Link>
       </p>
     </footer>
   );

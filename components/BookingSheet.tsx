@@ -3,10 +3,12 @@
 import { FormEvent, useEffect, useState } from "react";
 import { isHoneypot, sanitizePhoneInput, validateCommentField, validateGuestName, validatePhone } from "@/lib/commentModeration";
 import { fieldMessage, useCopy, useHours } from "@/lib/i18n";
+import { POLICY_REVISION } from "@/lib/legal";
 import { useLocale } from "@/lib/locale";
 import { isStaticHost } from "@/lib/staticHost";
 import { track, useBooking } from "./booking";
 import { CallButton } from "./CallButton";
+import { ConsentFields } from "./ConsentFields";
 import { SheetShell } from "./SheetShell";
 import { TimeField } from "./TimeField";
 
@@ -38,6 +40,8 @@ export function BookingSheet({ startOpen = false }: { startOpen?: boolean }) {
   const [error, setError] = useState("");
   const [mounted, setMounted] = useState(open);
   const [visible, setVisible] = useState(false);
+  const [consentPd, setConsentPd] = useState(false);
+  const [consentTg, setConsentTg] = useState(false);
 
   useEffect(() => {
     if (startOpen) {
@@ -48,6 +52,8 @@ export function BookingSheet({ startOpen = false }: { startOpen?: boolean }) {
 
   useEffect(() => {
     if (open) {
+      setConsentPd(false);
+      setConsentTg(false);
       setMounted(true);
       const id = requestAnimationFrame(() => {
         requestAnimationFrame(() => setVisible(true));
@@ -91,7 +97,16 @@ export function BookingSheet({ startOpen = false }: { startOpen?: boolean }) {
       setError(fieldMessage(commentError, t, t.sendFailBooking));
       return;
     }
-    const payload = Object.fromEntries(data.entries());
+    if (!consentPd || !consentTg) {
+      setError(t.consentNeed);
+      return;
+    }
+    const payload = {
+      ...Object.fromEntries(data.entries()),
+      consentPd: true,
+      consentTg: true,
+      policyRevision: POLICY_REVISION,
+    };
     if (isStaticHost) {
       setError(t.sendFailBooking);
       return;
@@ -190,9 +205,18 @@ export function BookingSheet({ startOpen = false }: { startOpen?: boolean }) {
               )}
             </p>
             {error ? <p className="text-sm">{error}</p> : null}
+            {isStaticHost ? null : (
+              <ConsentFields
+                purpose="booking"
+                pd={consentPd}
+                tg={consentTg}
+                onPd={setConsentPd}
+                onTg={setConsentTg}
+              />
+            )}
             <CallButton />
             {isStaticHost ? null : (
-              <button type="submit" className="rounded-full bg-ink py-3 text-paper">
+              <button type="submit" disabled={!consentPd || !consentTg} className="rounded-full bg-ink py-3 text-paper disabled:opacity-40">
                 {t.send}
               </button>
             )}

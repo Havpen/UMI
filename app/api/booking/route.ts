@@ -1,6 +1,7 @@
 import { isHoneypot, sanitizePhoneInput, validateCommentField, validateGuestName, validatePhone } from "@/lib/commentModeration";
 import { clientIp, isSameSiteRequest, jsonNoStore, rateLimit, readJsonBody } from "@/lib/httpGuard";
 import { isClockTime, isVisitDate, parsePartySize } from "@/lib/leadFields";
+import { isConsentGiven } from "@/lib/legal";
 import { addLead, formatLeadHtml, notifyTelegram } from "@/lib/leads";
 
 export const runtime = "nodejs";
@@ -14,7 +15,13 @@ type BookingBody = {
   time?: unknown;
   guests?: unknown;
   comment?: unknown;
+  consentPd?: unknown;
+  consentTg?: unknown;
 };
+
+function hasLeadConsent(body: { consentPd?: unknown; consentTg?: unknown }) {
+  return isConsentGiven(body.consentPd) && isConsentGiven(body.consentTg);
+}
 
 export async function POST(request: Request) {
   if (!isSameSiteRequest(request)) {
@@ -58,6 +65,9 @@ export async function POST(request: Request) {
   const commentError = validateCommentField(comment);
   if (commentError) {
     return jsonNoStore({ ok: false, error: commentError }, 400);
+  }
+  if (!hasLeadConsent(body)) {
+    return jsonNoStore({ ok: false }, 400);
   }
 
   const lead = await addLead({

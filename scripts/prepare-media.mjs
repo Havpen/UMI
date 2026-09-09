@@ -28,7 +28,6 @@ function run(args) {
   if (result.status !== 0) process.exit(result.status ?? 1);
 }
 
-// As shot: full duration, 60 fps, no cuts. Only codec/resolution/bitrate.
 run([
   "-y",
   "-i",
@@ -44,6 +43,7 @@ run([
   join(outDir, "hero-poster.jpg"),
 ]);
 
+// As shot: full duration, 60 fps, no cuts.
 run([
   "-y",
   "-hwaccel",
@@ -52,40 +52,16 @@ run([
   src,
   "-an",
   "-vf",
-  "scale=1920:1080:flags=lanczos",
+  "scale=1920:1080:flags=lanczos,fps=60",
   "-c:v",
   "libx264",
   "-preset",
-  "veryfast",
+  "medium",
   "-crf",
-  "28",
+  "20",
   "-pix_fmt",
   "yuv420p",
   "-movflags",
   "+faststart",
   join(outDir, "hero.mp4"),
-]);
-
-run([
-  "-y",
-  "-hwaccel",
-  "auto",
-  "-i",
-  src,
-  "-an",
-  "-vf",
-  "scale=1280:720:flags=lanczos",
-  "-c:v",
-  "libvpx-vp9",
-  "-b:v",
-  "0",
-  "-crf",
-  "36",
-  "-deadline",
-  "realtime",
-  "-cpu-used",
-  "8",
-  "-row-mt",
-  "1",
-  join(outDir, "hero.webm"),
 ]);

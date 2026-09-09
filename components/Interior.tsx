@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState, type MouseEvent, type PointerEvent } from "react";
 import { interiors, site } from "@/lib/content";
-import { asset } from "@/lib/asset";
 import { localizeInterior, useCopy } from "@/lib/i18n";
 import { useLocale } from "@/lib/locale";
 import { track } from "./booking";
+import { Photo } from "./Photo";
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 4;
@@ -223,8 +223,8 @@ function InteriorViewer({
           if (event.target === event.currentTarget && scaleRef.current <= 1.02) onClose();
         }}
       >
-        <img
-          src={asset(shot.src)}
+        <Photo
+          src={shot.src}
           alt={shot.alt}
           draggable={false}
           style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${scale})` }}
@@ -267,12 +267,13 @@ export function Interior() {
                 onClick={() => setOpen(i)}
                 aria-label={`${t.openPhoto} ${shot.title}`}
               >
-                <img
-                  src={asset(shot.src)}
+                <Photo
+                  src={shot.src}
                   alt={shot.alt}
                   width={1600}
                   height={1200}
-                  loading={i === 0 ? "eager" : "lazy"}
+                  loading={i < 4 ? "eager" : "lazy"}
+                  fetchPriority={i === 0 ? "high" : undefined}
                   decoding="async"
                 />
               </button>

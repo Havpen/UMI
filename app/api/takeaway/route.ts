@@ -1,6 +1,7 @@
 import { isHoneypot, sanitizePhoneInput, validateCommentField, validatePhone, validateTakeawayName } from "@/lib/commentModeration";
 import { clientIp, isSameSiteRequest, jsonNoStore, rateLimit, readJsonBody } from "@/lib/httpGuard";
 import { isClockTime, parsePartySize } from "@/lib/leadFields";
+import { isConsentGiven } from "@/lib/legal";
 import { addLead, formatLeadHtml, notifyTelegram, type LeadItem } from "@/lib/leads";
 import { isSafeDishId } from "@/lib/hallMenuShared";
 import { readHallMenu } from "@/lib/hallMenuStore";
@@ -20,6 +21,8 @@ type TakeawayBody = {
   persons?: unknown;
   comment?: unknown;
   items?: unknown;
+  consentPd?: unknown;
+  consentTg?: unknown;
 };
 
 export async function POST(request: Request) {
@@ -78,6 +81,9 @@ export async function POST(request: Request) {
   const commentError = validateCommentField(comment);
   if (commentError) {
     return jsonNoStore({ ok: false, error: commentError }, 400);
+  }
+  if (!isConsentGiven(body.consentPd) || !isConsentGiven(body.consentTg)) {
+    return jsonNoStore({ ok: false }, 400);
   }
 
   const sum = formatSum(

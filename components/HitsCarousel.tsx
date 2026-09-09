@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef } from "react";
-import { asset } from "@/lib/asset";
 import { dishPhoto, type Hit } from "@/lib/content";
 import { dishName, localizeCategory, useCopy } from "@/lib/i18n";
 import { useLocale } from "@/lib/locale";
 import { navHref } from "@/lib/paths";
 import { HScroll, scrollToCard } from "./HScroll";
+import { Photo } from "./Photo";
 
 function Arrow({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
   const t = useCopy();
@@ -113,11 +113,12 @@ export function HitsCarousel({
                     data-card-visual
                     className="flex h-full min-h-full w-full max-w-full flex-1 flex-col origin-center overflow-hidden rounded-3xl bg-paper-2 text-center will-change-transform md:origin-center"
                   >
-                    <img
-                      src={asset(dishPhoto(cover))}
+                    <Photo
+                      src={dishPhoto(cover)}
                       alt={cover ? `${coverName}${t.dishAltSuffix}` : localized.h1}
                       className="aspect-[4/3] w-full object-cover"
                       draggable={false}
+                      loading="lazy"
                       decoding="async"
                     />
                     <div className="flex flex-1 flex-col justify-center px-4 py-4 lg:px-5 lg:py-5">

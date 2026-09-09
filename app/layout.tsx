@@ -9,6 +9,7 @@ import { LocaleHead } from "@/components/LocaleHead";
 import { MenuViewProvider } from "@/components/MenuView";
 import { TakeawaySheet } from "@/components/TakeawaySheet";
 import { seo } from "@/lib/content";
+import { asset } from "@/lib/asset";
 import { LocaleProvider } from "@/lib/locale";
 import { ThemeProvider } from "@/lib/theme";
 import "./globals.css";
@@ -31,6 +32,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: seo["/"].title,
   description: seo["/"].description,
+  icons: {
+    icon: [
+      { url: asset("/favicon.ico"), sizes: "48x48" },
+      { url: asset("/favicon.svg"), type: "image/svg+xml" },
+      { url: asset("/brand/favicon-32.png"), sizes: "32x32", type: "image/png" },
+    ],
+    apple: [{ url: asset("/apple-touch-icon.png"), sizes: "180x180" }],
+  },
   openGraph: {
     title: seo["/"].title,
     description: seo["/"].description,

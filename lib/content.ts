@@ -240,6 +240,11 @@ export const seo = {
     description:
       "Ресторан UMI: ул. Кирова, 35, Гомель. Телефон +375 29 308-55-56. Часы работы, Instagram umi_gomel.",
   },
+  "/privacy": {
+    title: "Политика персональных данных — UMI Гомель",
+    description:
+      "Как ресторан UMI обрабатывает заявки на бронь и вынос, передача в Telegram и файлы cookie.",
+  },
 } as const;
 
 export function categorySeo(id: string) {

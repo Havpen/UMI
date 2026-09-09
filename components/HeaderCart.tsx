@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { asset } from "@/lib/asset";
 import { dishPhoto, site } from "@/lib/content";
 import { dishName, useCopy } from "@/lib/i18n";
 import { useLocale } from "@/lib/locale";
 import { track, useBooking } from "./booking";
 import { Price } from "./BynSign";
 import { useCart } from "./cart";
+import { Photo } from "./Photo";
 
 function BagIcon() {
   return (
@@ -122,9 +122,9 @@ export function HeaderCartPanel() {
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
             {items.map((item) => (
-              <img
+              <Photo
                 key={item.id}
-                src={asset(dishPhoto(item))}
+                src={dishPhoto(item)}
                 alt={`${dishName(item.id, item.name, locale, item.nameEn)}${t.dishAltSuffix}`}
                 className="h-14 w-14 shrink-0 rounded-xl object-cover"
                 loading="lazy"

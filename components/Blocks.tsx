@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { asset } from "@/lib/asset";
 import { useCopy } from "@/lib/i18n";
 import { navHref } from "@/lib/paths";
 import { AggregatorLinks } from "./AggregatorLinks";
+import { Photo } from "./Photo";
 
 export function Aggregators() {
   const t = useCopy();
@@ -34,8 +34,8 @@ export function DayTiles() {
           href="/lunch"
           className="hover-grow relative isolate overflow-hidden rounded-3xl"
         >
-          <img
-            src={asset("/media/day-lunch.jpg")}
+          <Photo
+            src="/media/day-lunch.jpg"
             alt=""
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"
@@ -51,8 +51,8 @@ export function DayTiles() {
           href="/brunch"
           className="hover-grow relative isolate overflow-hidden rounded-3xl"
         >
-          <img
-            src={asset("/media/day-brunch.jpg")}
+          <Photo
+            src="/media/day-brunch.jpg"
             alt=""
             className="absolute inset-0 h-full w-full object-cover"
             loading="lazy"

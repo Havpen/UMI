@@ -31,6 +31,7 @@ export const RESERVED_CATEGORY_IDS = new Set([
   "api",
   "booking",
   "contacts",
+  "privacy",
   "delivery",
 ]);
 
