@@ -5,11 +5,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
 import { nav, site } from "@/lib/content";
+import { useCopy } from "@/lib/i18n";
 import { isMenuPath } from "@/lib/menuSection";
-import { normPath } from "@/lib/paths";
+import { isAdminPath, normPath } from "@/lib/paths";
 import { track, useBooking } from "./booking";
 import { useCart } from "./cart";
 import { HeaderCartButton, HeaderCartPanel } from "./HeaderCart";
+import { LangSwitch } from "./LangSwitch";
+import { ThemeToggle } from "./ThemeToggle";
 import { useMenuJump, useMenuView } from "./MenuView";
 import { shouldSoftClick, useSoftNav } from "./softNav";
 
@@ -39,6 +42,7 @@ function BrandMark({ className = "" }: { className?: string }) {
         width={1329}
         height={799}
         className="brand-mark"
+        decoding="async"
       />
     </Link>
   );
@@ -48,6 +52,14 @@ function NavLinks({ onNavigate, className = "" }: { onNavigate?: () => void; cla
   const pathname = normPath(usePathname());
   const jumpMenu = useMenuJump();
   const section = useMenuView()?.section ?? "";
+  const t = useCopy();
+  const labels: Record<string, string> = {
+    "/menu": t.navMenu,
+    "/lunch": t.navLunch,
+    "/brunch": t.navBrunch,
+    "/delivery": t.navDelivery,
+    "/contacts": t.navContacts,
+  };
 
   return nav.map((item) => {
     const active =
@@ -71,7 +83,7 @@ function NavLinks({ onNavigate, className = "" }: { onNavigate?: () => void; cla
       }}
       className={`shrink-0 whitespace-nowrap ${active ? "text-ink" : "hover:text-ink"} ${className}`}
     >
-      {item.label}
+      {labels[item.href] ?? item.label}
     </Link>
     );
   });
@@ -82,6 +94,7 @@ export function Header() {
   const { panelOpen, setPanelOpen, setCheckoutOpen } = useCart();
   const pathname = usePathname();
   const router = useRouter();
+  const t = useCopy();
   const [menuOpen, setMenuOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const [panelHeight, setPanelHeight] = useState(0);
@@ -134,12 +147,14 @@ export function Header() {
     setCheckoutOpen(false);
   }
 
+  if (isAdminPath(pathname)) return null;
+
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-40 pt-3">
       {menuOpen ? (
         <button
           type="button"
-          aria-label="Закрыть меню"
+          aria-label={t.closeMenu}
           className="pointer-events-auto fixed inset-0 md:hidden"
           onClick={() => setMenuOpen(false)}
         />
@@ -150,13 +165,15 @@ export function Header() {
         <div className="flex h-14 items-center justify-between gap-3">
           <BrandMark />
           <div className="flex items-center gap-1">
+            <ThemeToggle />
+            <LangSwitch />
             <HeaderCartButton className="px-3 py-1.5 text-sm md:px-5 md:text-lg" />
             <button
               type="button"
               className="-mr-2 flex h-14 w-14 shrink-0 items-center justify-center rounded-full"
               aria-expanded={menuOpen}
               aria-controls="mobile-nav"
-              aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"}
+              aria-label={menuOpen ? t.closeMenu : t.openMenu}
               onClick={() => {
                 setPanelOpen(false);
                 setMenuOpen((open) => !open);
@@ -199,7 +216,7 @@ export function Header() {
               className="rounded-full bg-ink px-6 py-3.5 text-lg text-paper"
               onClick={openBooking}
             >
-              Забронировать
+              {t.book}
             </button>
           </nav>
         </div>
@@ -211,13 +228,15 @@ export function Header() {
           <NavLinks />
         </nav>
         <div className="relative z-10 ml-auto flex items-center gap-2">
+          <ThemeToggle />
+          <LangSwitch />
           <HeaderCartButton />
           <button
             type="button"
             className="rounded-full bg-ink px-5 py-1.5 text-base text-paper md:px-6 md:text-lg lg:px-8 lg:py-2 lg:text-xl"
             onClick={openBooking}
           >
-            Забронировать
+            {t.book}
           </button>
         </div>
       </div>
@@ -229,15 +248,16 @@ export function Header() {
 
 export function Footer() {
   const pathname = normPath(usePathname());
-  if (pathname === "/" || pathname === "/contacts") return null;
+  const t = useCopy();
+  if (isAdminPath(pathname) || pathname === "/" || pathname === "/contacts") return null;
 
   return (
-    <footer className="px-4 py-3 text-center">
+    <footer className="mt-auto shrink-0 px-4 py-3 text-center">
       <Link href="/" className="font-sans text-sm tracking-[0.22em] text-ink">
         UMI
       </Link>
       <p className="mt-1 text-xs text-ink-soft">
-        {site.addressFull}
+        {t.addressFull}
         {" · "}
         <a href={site.phoneHref} onClick={() => track("click_phone")}>
           {site.phone}
@@ -251,6 +271,7 @@ export function FloatingBook() {
   const pathname = normPath(usePathname());
   const { setOpen } = useBooking();
   const { setPanelOpen, setCheckoutOpen } = useCart();
+  const t = useCopy();
   const [visible, setVisible] = useState(false);
   const onHome = pathname === "/";
 
@@ -307,7 +328,7 @@ export function FloatingBook() {
       type="button"
       aria-hidden={!visible}
       tabIndex={visible ? 0 : -1}
-      className={`fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-40 -translate-x-1/2 rounded-full border border-white/70 bg-[rgba(255,252,247,0.94)] px-5 py-3 text-sm text-ink shadow-[0_12px_40px_rgba(44,39,35,0.18)] transition-opacity duration-300 md:hidden ${
+      className={`fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-40 -translate-x-1/2 rounded-full border border-line bg-paper px-5 py-3 text-sm text-ink shadow-[0_12px_40px_rgba(44,39,35,0.18)] transition-opacity duration-300 md:hidden ${
         visible ? "opacity-100" : "pointer-events-none opacity-0"
       }`}
       onClick={() => {
@@ -318,7 +339,7 @@ export function FloatingBook() {
         setOpen(true);
       }}
     >
-      Забронировать
+      {t.book}
     </button>
   );
 }

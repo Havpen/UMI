@@ -5,10 +5,12 @@ import { MenuTabs } from "./MenuTabs";
 export function MenuPageHeader({
   title,
   current,
+  categories,
   onSelect,
 }: {
   title: string;
   current?: string;
+  categories: { id: string; href: string; title: string }[];
   onSelect?: (id: string, href: string) => void;
 }) {
   return (
@@ -19,7 +21,7 @@ export function MenuPageHeader({
         </h1>
       </div>
       <div className="mt-12">
-        <MenuTabs current={current} onSelect={onSelect} />
+        <MenuTabs current={current} categories={categories} onSelect={onSelect} />
       </div>
     </>
   );

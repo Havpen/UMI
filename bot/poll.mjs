@@ -61,6 +61,13 @@ function minskStamp(iso) {
   }).format(new Date(iso));
 }
 
+function esc(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
 function count(leads, kind, from, day) {
   return leads.filter((lead) => {
     if (lead.kind !== kind) return false;
@@ -100,9 +107,9 @@ function todayText(leads) {
   if (!rows.length) return "Сегодня заявок с сайта ещё не было.";
   const lines = rows.slice(-20).map((lead) => {
     if (lead.kind === "booking") {
-      return `• Бронь ${minskStamp(lead.at)} — ${lead.name}, ${lead.phone}, ${lead.date} ${lead.time}, ${lead.guests} гост.`;
+      return `• Бронь ${minskStamp(lead.at)} — ${esc(lead.name)}, ${esc(lead.phone)}, ${esc(lead.date)} ${esc(lead.time)}, ${esc(lead.guests)} гост.`;
     }
-    return `• Вынос ${minskStamp(lead.at)} — ${lead.phone}, к ${lead.time}, ${lead.persons || "?"} персон, ${lead.sum} Br`;
+    return `• Вынос ${minskStamp(lead.at)} — ${esc(lead.phone)}, к ${esc(lead.time)}, ${esc(lead.persons || "?")} персон, ${esc(lead.sum)} Br`;
   });
   return ["<b>Сегодня с сайта</b>", ...lines].join("\n");
 }

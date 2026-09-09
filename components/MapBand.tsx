@@ -2,6 +2,16 @@
 
 import { useEffect, useRef } from "react";
 import { site } from "@/lib/content";
+import { useCopy } from "@/lib/i18n";
+import { useTheme } from "@/lib/theme";
+
+const LIGHT_MAP_FILTER = "grayscale(1) contrast(0.92) brightness(1.1)";
+const DARK_MAP_FILTER = "grayscale(1) sepia(0.45) brightness(0.55) contrast(1.08)";
+
+function paintMapTiles(ground: HTMLElement | null, dark: boolean) {
+  if (!ground) return;
+  ground.style.filter = dark ? DARK_MAP_FILTER : LIGHT_MAP_FILTER;
+}
 
 const routeHref = `https://yandex.by/maps/?rtext=~${site.coords.lat},${site.coords.lng}&rtt=auto`;
 
@@ -47,6 +57,7 @@ function loadYmaps(): Promise<YMaps> {
       mode: "release",
     });
     if (key) params.set("apikey", key);
+    script.referrerPolicy = "origin";
     script.src = `https://api-maps.yandex.ru/2.1/?${params}`;
     script.onload = done;
     script.onerror = reject;
@@ -55,13 +66,22 @@ function loadYmaps(): Promise<YMaps> {
 }
 
 export function MapBand({
-  title = "Как найти",
+  title,
   fill = false,
 }: {
   title?: string | false;
   fill?: boolean;
 }) {
   const mapRef = useRef<HTMLDivElement>(null);
+  const groundRef = useRef<HTMLElement | null>(null);
+  const { theme } = useTheme();
+  const dark = theme === "dark";
+  const t = useCopy();
+  const heading = title === false ? false : (title ?? t.findUs);
+
+  useEffect(() => {
+    paintMapTiles(groundRef.current, dark);
+  }, [dark]);
 
   useEffect(() => {
     const el = mapRef.current;
@@ -89,10 +109,9 @@ export function MapBand({
             },
           );
           map.controls.get("zoomControl")?.options.set("position", { right: 12, bottom: 48 });
-          const ground = map.panes.get("ground")?.getElement();
-          if (ground) {
-            ground.style.filter = "grayscale(1) contrast(0.92) brightness(1.1)";
-          }
+          const ground = map.panes.get("ground")?.getElement() ?? null;
+          groundRef.current = ground;
+          paintMapTiles(ground, document.documentElement.getAttribute("data-theme") === "dark");
           const flagLayout = ymaps.templateLayoutFactory.createClass(
             '<div class="umi-ymap-flag">UMI</div>',
           );
@@ -140,17 +159,16 @@ export function MapBand({
         else window.cancelIdleCallback(idleId);
       }
       map?.destroy();
+      groundRef.current = null;
     };
   }, []);
 
   return (
-    <section className={`relative z-0 isolate ${fill ? "flex min-h-0 flex-1 flex-col" : ""}`}>
-      {title ? <h2 className="px-5 pb-8 text-center font-serif text-6xl">{title}</h2> : null}
+    <section className={`relative z-0 isolate ${fill ? "mt-auto flex min-h-0 flex-col" : ""}`}>
+      {heading ? <h2 className="px-5 pb-8 text-center font-serif text-6xl">{heading}</h2> : null}
       <div
         data-map-canvas
-        className={`relative z-0 w-full overflow-hidden ${
-          fill ? "min-h-[min(58vh,520px)] flex-1" : "h-[min(72vh,620px)]"
-        }`}
+        className="relative z-0 h-[min(50vh,434px)] w-full overflow-hidden"
       >
         <div ref={mapRef} className="absolute inset-0 h-full w-full" />
         <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-36 bg-gradient-to-b from-paper via-paper/75 to-transparent" />
@@ -161,7 +179,7 @@ export function MapBand({
             rel="noopener noreferrer"
             className="hover-grow inline-flex rounded-full bg-ink px-[1.875rem] py-[1.125rem] text-[1.3125rem] text-paper"
           >
-            Маршрут
+            {t.route}
           </a>
         </div>
       </div>

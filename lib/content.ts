@@ -1,4 +1,7 @@
-import cleverCatalog from "./cleverCatalog.json";
+import hallCategories from "./hallCategories.json";
+import type { HallCategory, MenuCategoryId } from "./hallMenuShared";
+
+export type { HallCategory, HallDish, MenuCategoryId } from "./hallMenuShared";
 
 export const site = {
   name: "UMI",
@@ -39,7 +42,7 @@ export function todayHallHours() {
 
 export const lunch = {
   hours: "Будни 12:00–16:00",
-  tile: "Будни 12:00–16:00. Салат, суп и горячее — сет или по отдельности.",
+  tile: "Будни 12:00–16:00. Салат, суп и горячее — комплекс или по отдельности.",
   text: "По будням с 12:00 до 16:00 — ланч: салат, суп и второе. Можно взять вместе или по одному. Тот же зал, дневной ритм.",
 } as const;
 
@@ -66,27 +69,15 @@ export const aggregators = [
   },
 ] as const;
 
-export type MenuCategoryId =
-  | "starters"
-  | "salads-poke"
-  | "soups"
-  | "mains"
-  | "sushi"
-  | "desserts";
-
 export const menuCategories: {
   id: MenuCategoryId;
   href: string;
   title: string;
   h1: string;
-}[] = [
-  { id: "starters", href: "/menu/starters", title: "Закуски", h1: "Закуски и стартеры" },
-  { id: "salads-poke", href: "/menu/salads-poke", title: "Салаты и поке", h1: "Салаты и поке" },
-  { id: "soups", href: "/menu/soups", title: "Супы", h1: "Супы" },
-  { id: "mains", href: "/menu/mains", title: "Основные", h1: "Основные блюда" },
-  { id: "sushi", href: "/menu/sushi", title: "Суши и роллы", h1: "Суши и роллы" },
-  { id: "desserts", href: "/menu/desserts", title: "Десерты", h1: "Десерты" },
-];
+}[] = (hallCategories as HallCategory[]).map((cat) => ({
+  ...cat,
+  href: `/menu/${cat.id}`,
+}));
 
 export type Hit = {
   id: string;
@@ -97,118 +88,9 @@ export type Hit = {
   image?: string;
   description?: string;
   weight?: string;
+  nameEn?: string;
+  descriptionEn?: string;
 };
-
-type CleverDish = {
-  id: string;
-  name: string;
-  price: string;
-  category: MenuCategoryId;
-  description: string;
-  weight: string;
-  image: string;
-};
-
-const cleverDishes = cleverCatalog as CleverDish[];
-const cleverById = new Map(cleverDishes.map((dish) => [dish.id, dish]));
-
-const hitDefs: { id: string; name: string; price: string; category: MenuCategoryId }[] = [
-  { id: "vitello-tonnato", name: "Вителло тоннато", price: "25,50", category: "starters" },
-  { id: "tom-yam", name: "Том ям с морепродуктами", price: "29,00", category: "soups" },
-  { id: "philadelphia", name: "Филадельфия с авокадо", price: "31,50", category: "sushi" },
-  { id: "tagliatelle", name: "Тальятелле с тунцом татаки", price: "24,00", category: "mains" },
-  { id: "ramen", name: "Рамен с говядиной", price: "28,50", category: "soups" },
-  { id: "striploin", name: "Стейк стриплойн с бельгийским картофелем", price: "60,00", category: "mains" },
-  { id: "baked-roll", name: "Запечённый ролл с креветкой и манго", price: "23,50", category: "sushi" },
-  { id: "citrus-salad", name: "Салат с креветками в цитрусовой заправке", price: "26,00", category: "salads-poke" },
-  { id: "fettuccine", name: "Фетучини с рваной уткой", price: "32,50", category: "mains" },
-  { id: "tempura", name: "Темпура с карамелизированным лососем", price: "25,00", category: "sushi" },
-  { id: "poke", name: "Поке с лососем", price: "26,50", category: "salads-poke" },
-  { id: "gyoza", name: "Гёдза со свининой", price: "25,50", category: "starters" },
-];
-
-const draftDescriptions: Record<string, string> = {
-  "vitello-tonnato": "Телятина, соус из тунца, каперсы, руккола, сыр «Пармезан»",
-  "tom-yam": "Кокосовый бульон, креветки, кальмар, грибы, лемонграсс, лайм, кинза",
-  "tagliatelle": "Тальятелле, тунец татаки, соус, зелень",
-  "tempura": "Лосось карамелизированный, кляр темпура, соус",
-  "poke": "Рис, лосось, авокадо, огурец, эдамаме, соус поке, кунжут",
-  "gyoza": "Тесто, свинина, капуста, зелёный лук, соус",
-  "salat-s-rostbifom-i-lukom-fri": "Салат, ростбиф, лук фри, соус",
-  "poke-s-bekonom": "Рис, бекон, авокадо, овощи, соус поке, кунжут",
-  "gribnoy-krem-sup-s-kopchyonoy": "Грибы, сливки, копчёное мясо",
-  "roll-s-krevetkoy-lososem-i-avokado-v-tobiko":
-    "Рис, водоросли «Нори», сыр сливочный, креветка, лосось, авокадо, тобико",
-  "roll-v-opalennom-tuntse-s-ogurtsom-i-lososem":
-    "Рис, водоросли «Нори», сыр сливочный, опаленный тунец, огурец, лосось",
-  "roll-s-tuntsom-lososem-i-krevetkoy": "Рис, водоросли «Нори», сыр сливочный, тунец, лосось, креветка",
-  "roll-v-opalennom-morskom-okune-s-mango":
-    "Рис, водоросли «Нори», сыр сливочный, опаленный морской окунь, манго",
-  "roll-v-losose-s-kokosovym-sousom": "Рис, водоросли «Нори», сыр сливочный, лосось, кокосовый соус",
-  "roll-s-lososem-tataki-i-takuanom": "Рис, водоросли «Нори», сыр сливочный, лосось татаки, такуан",
-  "zapechyonnyy-roll-s-bekonom":
-    "Рис, водоросли «Нори», бекон, сливочный сыр, сырная шапка, соус «Унаги», кунжут",
-  "zapechyonnyy-roll-s-opalennym-okunem":
-    "Рис, водоросли «Нори», опаленный окунь, сливочный сыр, сырная шапка, кунжут",
-  "zapechyonnyy-roll-s-tuntsom-i-krevetkoy":
-    "Рис, водоросли «Нори», тунец, креветка, сливочный сыр, сырная шапка, кунжут",
-  "utinaya-nozhka-konfi-s-kartofelnym-pyure": "Утиная ножка конфи, картофельное пюре",
-  "khrustyashchiy-kalmar-v-souse-5-spetsiy": "Кальмар, соус 5 специй",
-  "steyk-file-minon-s-kartofelnym-pyure": "Стейк «Филе-миньон», картофельное пюре",
-  striploin: "Стейк стриплойн, бельгийский картофель",
-  "steyk-iz-lososya-s-brokkoli": "Стейк из лосося, брокколи",
-  "pasta-karbonara": "Паста, бекон, яйцо, сыр «Пармезан»",
-  "spagetti-amatrichana-s-bekonom": "Спагетти, бекон, томатный соус, перец «Чили»",
-  "pasta-talyatelle-s-krevetkami": "Тальятелле, креветки, соус",
-  fettuccine: "Фетучини, рваная утка, соус",
-};
-
-function dishDescription(id: string, clever?: string) {
-  return clever || draftDescriptions[id];
-}
-
-function fromClever(id: string): Pick<Hit, "image" | "description" | "weight"> {
-  const row = cleverById.get(id);
-  return {
-    image: row?.image,
-    description: dishDescription(id, row?.description),
-    weight: row?.weight || undefined,
-  };
-}
-
-export const hits: Hit[] = hitDefs.map((hit) => ({
-  ...hit,
-  href: `/menu/${hit.category}#${hit.id}`,
-  ...fromClever(hit.id),
-}));
-
-const hitIds = new Set(hits.map((hit) => hit.id));
-
-export const dishes: Hit[] = [
-  ...hits,
-  ...cleverDishes
-    .filter((dish) => !hitIds.has(dish.id))
-    .map((dish) => ({
-      id: dish.id,
-      name: dish.name,
-      price: dish.price,
-      category: dish.category,
-      href: `/menu/${dish.category}#${dish.id}`,
-      image: dish.image,
-      description: dishDescription(dish.id, dish.description),
-      weight: dish.weight || undefined,
-    })),
-];
-
-export function dishesInCategory(id: MenuCategoryId) {
-  const featured = hits.filter((hit) => hit.category === id);
-  const rest = dishes.filter((dish) => dish.category === id && !hitIds.has(dish.id));
-  return [...featured, ...rest];
-}
-
-export function dishById(id: string) {
-  return dishes.find((dish) => dish.id === id);
-}
 
 export function dishPhoto(dish?: Pick<Hit, "image"> | null) {
   return dish?.image ?? "/media/dish-placeholder.jpg";
@@ -216,10 +98,6 @@ export function dishPhoto(dish?: Pick<Hit, "image"> | null) {
 
 export function dishAlt(name: string) {
   return `${name} — ресторан UMI Гомель`;
-}
-
-export function categoryCover(id: MenuCategoryId) {
-  return dishesInCategory(id).find((dish) => dish.image);
 }
 
 export const interiors = [
@@ -325,6 +203,10 @@ export const seo = {
     description:
       "Тальятелле с тунцом татаки, фетучини с рваной уткой, стейк стриплойн, вок. Основные блюда ресторана UMI в Гомеле.",
   },
+  "/menu/nigiri": {
+    title: "Нигири — UMI Гомель",
+    description: "Нигири с лососем и нигири с тунцом в ресторане UMI в Гомеле.",
+  },
   "/menu/sushi": {
     title: "Суши и роллы — UMI Гомель",
     description:
@@ -359,6 +241,18 @@ export const seo = {
       "Ресторан UMI: ул. Кирова, 35, Гомель. Телефон +375 29 308-55-56. Часы работы, Instagram umi_gomel.",
   },
 } as const;
+
+export function categorySeo(id: string) {
+  const key = `/menu/${id}` as keyof typeof seo;
+  const known = seo[key];
+  if (known) return known;
+  const cat = menuCategories.find((item) => item.id === id);
+  if (!cat) return null;
+  return {
+    title: `${cat.h1} — UMI Гомель`,
+    description: `${cat.title} в ресторане UMI в Гомеле.`,
+  };
+}
 
 export const homeSeoText =
   "UMI — камерный ресторан в центре Гомеля. В меню азиатское ядро и европейские блюда: том ям и рамен рядом с пастой и стейком, роллы — рядом с вителло тоннато. Вечером — стол в зале, днём — ланч, в выходные — бранч. Стол бронируют на сайте, заказ с собой — заявкой, доставку везут агрегаторы.";

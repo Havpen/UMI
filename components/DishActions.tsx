@@ -1,17 +1,23 @@
 "use client";
 
 import { useCart } from "./cart";
+import { useCopy } from "@/lib/i18n";
 
 export function DishActions({
   id,
   name,
+  nameEn,
   price,
+  image,
 }: {
   id: string;
   name: string;
+  nameEn?: string;
   price: string;
+  image?: string;
 }) {
   const { add, inc, dec, qty } = useCart();
+  const t = useCopy();
   const count = qty(id);
 
   if (count === 0) {
@@ -22,10 +28,10 @@ export function DishActions({
         onClick={(event) => {
           event.preventDefault();
           event.stopPropagation();
-          add({ id, name, price });
+          add({ id, name, nameEn, price, image });
         }}
       >
-        <span>Добавить</span>
+        <span>{t.add}</span>
         <span aria-hidden>+</span>
       </button>
     );
@@ -45,7 +51,7 @@ export function DishActions({
           event.stopPropagation();
           dec(id);
         }}
-        aria-label="Меньше"
+        aria-label={t.less}
       >
         −
       </button>
@@ -58,7 +64,7 @@ export function DishActions({
           event.stopPropagation();
           inc(id);
         }}
-        aria-label="Больше"
+        aria-label={t.more}
       >
         +
       </button>

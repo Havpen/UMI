@@ -3,15 +3,18 @@
 import Link from "next/link";
 import { useCallback, useEffect, useRef } from "react";
 import { asset } from "@/lib/asset";
-import { categoryCover, dishAlt, dishPhoto, menuCategories } from "@/lib/content";
+import { dishPhoto, type Hit } from "@/lib/content";
+import { dishName, localizeCategory, useCopy } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale";
 import { navHref } from "@/lib/paths";
 import { HScroll, scrollToCard } from "./HScroll";
 
 function Arrow({ dir, onClick }: { dir: "prev" | "next"; onClick: () => void }) {
+  const t = useCopy();
   return (
     <button
       type="button"
-      aria-label={dir === "prev" ? "Предыдущий раздел" : "Следующий раздел"}
+      aria-label={dir === "prev" ? t.prevSection : t.nextSection}
       onClick={onClick}
       className="hover-grow glass flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-lg md:h-11 md:w-11"
     >
@@ -24,7 +27,13 @@ function cardsOf(scroller: HTMLDivElement | null) {
   return scroller ? [...scroller.querySelectorAll<HTMLElement>("[data-card]")] : [];
 }
 
-export function HitsCarousel() {
+export function HitsCarousel({
+  categories,
+}: {
+  categories: { id: string; href: string; title: string; h1: string; cover?: Hit }[];
+}) {
+  const t = useCopy();
+  const { locale } = useLocale();
   const scroller = useRef<HTMLDivElement>(null);
   const active = useRef(0);
 
@@ -83,13 +92,15 @@ export function HitsCarousel() {
   return (
     <section className="py-16">
       <div className="page-shell text-center">
-        <h2 className="font-serif text-6xl">Меню</h2>
+        <h2 className="font-serif text-6xl">{t.menu}</h2>
 
         <div className="mt-8 flex w-full items-center gap-1.5 md:gap-4">
           <Arrow dir="prev" onClick={() => goTo(active.current - 1)} />
           <HScroll ref={scroller} snap="center" className="snap-row min-w-0 flex-1 items-stretch gap-3 overflow-x-auto py-2 md:gap-4 md:py-5">
-            {menuCategories.map((cat) => {
-              const cover = categoryCover(cat.id);
+            {categories.map((cat) => {
+              const cover = cat.cover;
+              const localized = localizeCategory(cat, locale);
+              const coverName = cover ? dishName(cover.id, cover.name, locale, cover.nameEn) : localized.h1;
               return (
                 <article
                   key={cat.id}
@@ -104,12 +115,13 @@ export function HitsCarousel() {
                   >
                     <img
                       src={asset(dishPhoto(cover))}
-                      alt={cover ? dishAlt(cover.name) : cat.h1}
+                      alt={cover ? `${coverName}${t.dishAltSuffix}` : localized.h1}
                       className="aspect-[4/3] w-full object-cover"
                       draggable={false}
+                      decoding="async"
                     />
                     <div className="flex flex-1 flex-col justify-center px-4 py-4 lg:px-5 lg:py-5">
-                      <p className="font-serif text-xl leading-tight lg:text-2xl">{cat.title}</p>
+                      <p className="font-serif text-xl leading-tight lg:text-2xl">{localized.title}</p>
                     </div>
                   </Link>
                 </article>
@@ -123,7 +135,7 @@ export function HitsCarousel() {
           href={navHref("/menu")}
           className="hover-grow mt-8 inline-flex rounded-full bg-ink px-8 py-3 text-xl text-paper lg:px-10 lg:py-3.5 lg:text-2xl"
         >
-          Всё меню
+          {t.allMenu}
         </Link>
       </div>
     </section>

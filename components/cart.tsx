@@ -2,18 +2,50 @@
 
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Hit } from "@/lib/content";
+import { isSafeDishId } from "@/lib/hallMenuShared";
+import { formatSum, parsePrice } from "@/lib/money";
 import { track } from "./booking";
 
 export type CartItem = {
   id: string;
   name: string;
+  nameEn?: string;
   price: string;
   qty: number;
+  image?: string;
 };
+
+export { formatSum, parsePrice };
+
+const MAX_QTY = 20;
+const MAX_LINES = 40;
+
+function sanitizeCart(raw: unknown): CartItem[] {
+  if (!Array.isArray(raw)) return [];
+  const out: CartItem[] = [];
+  for (const row of raw.slice(0, MAX_LINES)) {
+    if (!row || typeof row !== "object") continue;
+    const item = row as CartItem;
+    const id = String(item.id ?? "");
+    if (!isSafeDishId(id)) continue;
+    const qty = Number(item.qty);
+    if (!Number.isInteger(qty) || qty < 1) continue;
+    const image = typeof item.image === "string" && item.image.startsWith("/media/") ? item.image : undefined;
+    out.push({
+      id,
+      name: String(item.name ?? "").slice(0, 140),
+      nameEn: item.nameEn ? String(item.nameEn).slice(0, 140) : undefined,
+      price: String(item.price ?? "").slice(0, 16),
+      qty: Math.min(qty, MAX_QTY),
+      image,
+    });
+  }
+  return out;
+}
 
 type CartContextValue = {
   items: CartItem[];
-  add: (hit: Pick<Hit, "id" | "name" | "price">) => void;
+  add: (hit: Pick<Hit, "id" | "name" | "price" | "image" | "nameEn">) => void;
   inc: (id: string) => void;
   dec: (id: string) => void;
   remove: (id: string) => void;
@@ -30,14 +62,6 @@ type CartContextValue = {
 const STORAGE_KEY = "umi-takeaway-cart";
 const CartContext = createContext<CartContextValue | null>(null);
 
-export function parsePrice(price: string) {
-  return Number.parseFloat(price.replace(",", "."));
-}
-
-export function formatSum(value: number) {
-  return value.toFixed(2).replace(".", ",");
-}
-
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [ready, setReady] = useState(false);
@@ -47,7 +71,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const raw = sessionStorage.getItem(STORAGE_KEY);
-      if (raw) setItems(JSON.parse(raw) as CartItem[]);
+      if (raw) setItems(sanitizeCart(JSON.parse(raw)));
     } catch {
       /* ignore */
     }
@@ -72,14 +96,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         setItems((prev) => {
           const found = prev.find((item) => item.id === hit.id);
           if (found) {
-            return prev.map((item) => (item.id === hit.id ? { ...item, qty: item.qty + 1 } : item));
+            return prev.map((item) =>
+              item.id === hit.id ? { ...item, qty: Math.min(MAX_QTY, item.qty + 1) } : item,
+            );
           }
-          return [...prev, { id: hit.id, name: hit.name, price: hit.price, qty: 1 }];
+          if (prev.length >= MAX_LINES) return prev;
+          return [...prev, { id: hit.id, name: hit.name, nameEn: hit.nameEn, price: hit.price, qty: 1, image: hit.image }];
         });
         track("takeaway_add", { dish: hit.id });
       },
       inc: (id) => {
-        setItems((prev) => prev.map((item) => (item.id === id ? { ...item, qty: item.qty + 1 } : item)));
+        setItems((prev) => prev.map((item) => (item.id === id ? { ...item, qty: Math.min(MAX_QTY, item.qty + 1) } : item)));
       },
       dec: (id) => {
         setItems((prev) =>

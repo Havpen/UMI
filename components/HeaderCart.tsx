@@ -2,7 +2,9 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { asset } from "@/lib/asset";
-import { dishAlt, dishById, dishPhoto, site } from "@/lib/content";
+import { dishPhoto, site } from "@/lib/content";
+import { dishName, useCopy } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale";
 import { track, useBooking } from "./booking";
 import { Price } from "./BynSign";
 import { useCart } from "./cart";
@@ -18,6 +20,7 @@ function BagIcon() {
 
 export function HeaderCartButton({ className = "" }: { className?: string }) {
   const { count, panelOpen, setPanelOpen } = useCart();
+  const t = useCopy();
   if (count === 0) return null;
 
   return (
@@ -29,7 +32,7 @@ export function HeaderCartButton({ className = "" }: { className?: string }) {
       onClick={() => setPanelOpen(!panelOpen)}
     >
       <BagIcon />
-      Корзина
+      {t.cart}
       <span className="text-paper/70">{count}</span>
     </button>
   );
@@ -37,6 +40,8 @@ export function HeaderCartButton({ className = "" }: { className?: string }) {
 
 export function HeaderCartPanel() {
   const { items, count, sumLabel, clear, panelOpen, setPanelOpen, setCheckoutOpen } = useCart();
+  const t = useCopy();
+  const { locale } = useLocale();
   const { setOpen: setBookingOpen } = useBooking();
   const panelRef = useRef<HTMLDivElement>(null);
   const [panelHeight, setPanelHeight] = useState(0);
@@ -88,7 +93,7 @@ export function HeaderCartPanel() {
       {panelOpen ? (
         <button
           type="button"
-          aria-label="Закрыть корзину"
+          aria-label={t.closeCart}
           className="pointer-events-auto fixed inset-0 z-30 cursor-default"
           onClick={() => setPanelOpen(false)}
         />
@@ -106,10 +111,10 @@ export function HeaderCartPanel() {
             <div>
               <p className="font-serif text-xl tracking-[0.18em]">{site.name}</p>
               <p className="mt-1 text-sm text-ink-soft">
-                <Price value={sumLabel} /> · самовывоз сегодня
+                    <Price value={sumLabel} /> · {t.pickupToday}
               </p>
             </div>
-            <button type="button" aria-label="Очистить корзину" className="text-ink-soft" onClick={clear}>
+            <button type="button" aria-label={t.clearCart} className="text-ink-soft" onClick={clear}>
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
                 <path d="M5 7h14M10 7V5h4v2M8 7l1 13h6l1-13" />
               </svg>
@@ -119,9 +124,11 @@ export function HeaderCartPanel() {
             {items.map((item) => (
               <img
                 key={item.id}
-                src={asset(dishPhoto(dishById(item.id)))}
-                alt={dishAlt(item.name)}
+                src={asset(dishPhoto(item))}
+                alt={`${dishName(item.id, item.name, locale, item.nameEn)}${t.dishAltSuffix}`}
                 className="h-14 w-14 shrink-0 rounded-xl object-cover"
+                loading="lazy"
+                decoding="async"
               />
             ))}
           </div>
@@ -135,7 +142,7 @@ export function HeaderCartPanel() {
               setCheckoutOpen(true);
             }}
           >
-            Оформить заказ
+            {t.checkout}
           </button>
         </div>
       </div>

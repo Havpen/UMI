@@ -22,6 +22,8 @@ export function AggregatorLinks() {
             width={160}
             height={160}
             className="h-full w-full object-contain"
+            loading="lazy"
+            decoding="async"
           />
         </a>
       ))}

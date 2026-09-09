@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { site } from "@/lib/content";
+import { useCopy } from "@/lib/i18n";
 import { track } from "./booking";
 
 function canDirectCall() {
@@ -14,6 +15,7 @@ function canDirectCall() {
 const face = "col-start-1 row-start-1 transition-opacity duration-500 ease-out";
 
 export function CallButton({ className = "" }: { className?: string }) {
+  const t = useCopy();
   const [mobile, setMobile] = useState(false);
   const [showNumber, setShowNumber] = useState(false);
 
@@ -26,7 +28,7 @@ export function CallButton({ className = "" }: { className?: string }) {
   if (mobile) {
     return (
       <a href={site.phoneHref} className={cls} onClick={() => track("click_phone")}>
-        Позвонить
+        {t.call}
       </a>
     );
   }
@@ -45,7 +47,7 @@ export function CallButton({ className = "" }: { className?: string }) {
       }}
     >
       <span className={`${face} ${showNumber ? "pointer-events-none opacity-0" : "opacity-100"}`}>
-        Позвонить
+        {t.call}
       </span>
       <span className={`${face} ${showNumber ? "opacity-100" : "pointer-events-none opacity-0"}`}>
         {site.phone}

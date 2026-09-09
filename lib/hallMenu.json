@@ -1,0 +1,584 @@
+[
+  {
+    "id": "bruskety-tartar-unagi",
+    "name": "Брускетты с тартаром из говядины и муссом унаги",
+    "price": "17,50",
+    "category": "starters",
+    "image": "/media/dishes/bruskety-tartar-unagi.jpg",
+    "description": "Яркий гастрономический дуэт Европы и Азии. Хрустящие гренки ржаной чиабатты с сочным тартаром из говядины, заправленным горчицей и соусом кимчи. Подается с нежным взбитым муссом унаги и пряными каперсами",
+    "weight": "140 г"
+  },
+  {
+    "id": "vitello-tonnato",
+    "name": "Вителло Тоннато",
+    "price": "31,00",
+    "category": "starters",
+    "image": "/media/dishes/vitello-tonnato.jpg",
+    "description": "Говядина готова к подаче, отличается нежной текстурой и насыщенным мясным вкусом. Соусы демиглас и тонатто придают глубину и бархатистость, добавляя умеренную пикантность. Трюфельный айоли и зелёное масло вносят ароматные нотки, а перец и соль подчёркивают естественный вкус мяса",
+    "weight": "120 г"
+  },
+  {
+    "id": "karpachcho-mramornaya-govyadina",
+    "name": "Карпаччо из мраморной говядины",
+    "price": "31,00",
+    "category": "starters",
+    "image": "/media/dishes/karpachcho-mramornaya-govyadina.jpg",
+    "description": "С трюфельным айоли. Говяжья вырезка подаётся тонко нарезанной, отличается нежной текстурой и насыщенным мясным вкусом. Трюфельный айоли придаёт блюду ароматные нотки и мягкую пикантность, а зелёное масло добавляет свежесть. Пармезан вносит солоноватую глубину, а соль и перец подчёркивают естественный вкус мяса",
+    "weight": "140 г"
+  },
+  {
+    "id": "tartar-govyadina-belgiyskiy-kartofel",
+    "name": "Тартар из говядины с бельгийским картофелем",
+    "price": "30,00",
+    "category": "starters",
+    "image": "/media/dishes/tartar-govyadina-belgiyskiy-kartofel.jpg",
+    "description": "Говядина в блюде обладает нежной текстурой и насыщенным мясным вкусом. Бельгийский картофель придаёт сытность и мягкую, чуть рассыпчатую основу. Трюфельный крем вносит изысканную ароматную нотку, а пармезан добавляет солоноватую глубину и лёгкую хрусткость",
+    "weight": "220 г"
+  },
+  {
+    "id": "salat-nisuaz-s-tuntsom",
+    "name": "Салат Нисуаз с тунцом",
+    "price": "28,80",
+    "category": "salads-poke",
+    "image": "/media/dishes/salat-nisuaz-s-tuntsom.jpg",
+    "description": "Классический провансальский салат со свежими овощами, тунцом, яйцом и картофелем под лёгкой заправкой Нисуаз",
+    "weight": "260 г"
+  },
+  {
+    "id": "citrus-salad",
+    "name": "Салат с креветками в цитрусовой заправке",
+    "price": "31,70",
+    "category": "salads-poke",
+    "image": "/media/dishes/citrus-salad.jpg",
+    "description": "Обжаренные креветки со свежей зеленью в сочетании с цитрусовыми нотками",
+    "weight": "250 г"
+  },
+  {
+    "id": "salat-s-tsyplyonkom-i-khrustyashchey-yaichnoy-lapshoy",
+    "name": "Салат с хрустящей лапшой и цыплёнком",
+    "price": "27,60",
+    "category": "salads-poke",
+    "image": "/media/dishes/salat-s-tsyplyonkom-i-khrustyashchey-yaichnoy-lapshoy.jpg",
+    "description": "Хрустящая яичная лапша с цыплёнком. Контраст нежности и хруста",
+    "weight": "210 г"
+  },
+  {
+    "id": "poke-s-krevetkami",
+    "name": "Поке с креветками",
+    "price": "30,00",
+    "category": "salads-poke",
+    "image": "/media/dishes/poke-s-krevetkami.jpg",
+    "description": "На подушке из риса выкладывается щедрая порция сочных креветок, спелый авокадо, маринованный такуан, томаты черри и деликатные водоросли вакаме. Заправляется пикантным итальянским соусом",
+    "weight": "250 г"
+  },
+  {
+    "id": "poke",
+    "name": "Поке с лососем",
+    "price": "33,50",
+    "category": "salads-poke",
+    "image": "/media/dishes/poke.jpg",
+    "description": "В блюде гармонично сочетаются нежный лосось и рассыпчатый рис. Свежие овощи и чука-салат придают ему сочность, а итальянский соус и лайм — пикантность. Такуан добавляет приятную хрустящую нотку",
+    "weight": "250 г"
+  },
+  {
+    "id": "poke-tunets-tataki",
+    "name": "Поке с тунцом татаки",
+    "price": "29,00",
+    "category": "salads-poke",
+    "image": "/media/dishes/poke-tunets-tataki.jpg",
+    "description": "Яркий азиатский обед с ломтиками деликатесного тунца татаки. Полноценный баланс текстур: правильный рис, сочный дайкон, свежий огурец, спелые черри и нежные водоросли вакаме, объединенные насыщенным итальянским соусом",
+    "weight": "250 г"
+  },
+  {
+    "id": "tom-kha-kurinoe-file",
+    "name": "Том Кха с куриным филе",
+    "price": "31,00",
+    "category": "soups",
+    "image": "/media/dishes/tom-kha-kurinoe-file.jpg",
+    "description": "Нежная кокосово-пряная классика Азии. Плотный бульон том кха с кусочками куриного филе, сытной яичной лапшой, грибами шиитаке и томатами черри. Лук-порей, свежая кинза и перец чили создают идеальный баланс вкуса и остроты",
+    "weight": "300 г"
+  },
+  {
+    "id": "tom-yam",
+    "name": "Том ям с морепродуктами",
+    "price": "35,40",
+    "category": "soups",
+    "image": "/media/dishes/tom-yam.jpg",
+    "description": "Знаменитый тайский кисло-острый суп с ярким взрывным вкусом и насыщенным ароматом свежих трав",
+    "weight": "400 г"
+  },
+  {
+    "id": "lapsha-pad-tay-s-krevetkami",
+    "name": "Пад тай с креветками",
+    "price": "33,60",
+    "category": "mains",
+    "image": "/media/dishes/lapsha-pad-tay-s-krevetkami.jpg",
+    "description": "Классическая тайская жареная рисовая лапша с креветками, яйцом, ростками сои и арахисом в кисло-сладком соусе",
+    "weight": "310 г"
+  },
+  {
+    "id": "risovaya-lapsha-s-tsyplyonkom",
+    "name": "Рисовая лапша с цыплёнком в соусе 5 специй",
+    "price": "28,70",
+    "category": "mains",
+    "image": "/media/dishes/risovaya-lapsha-s-tsyplyonkom.jpg",
+    "description": "Жареная рисовая лапша с цыплёнком, овощами в соусе 5 специй",
+    "weight": "330 г"
+  },
+  {
+    "id": "soba-s-govyadinoy-v-perechnom-souse",
+    "name": "Соба с говядиной в перечном соусе",
+    "price": "36,00",
+    "category": "mains",
+    "image": "/media/dishes/soba-s-govyadinoy-v-perechnom-souse.jpg",
+    "description": "Нежная говядина, тушенная в сливочно-перечном соусе. Подаётся с гречневой лапшой",
+    "weight": "350 г"
+  },
+  {
+    "id": "yaichnaya-lapsha-s-tsyplyonkom",
+    "name": "Яичная лапша с цыплёнком в кисло-сладком соусе",
+    "price": "27,50",
+    "category": "mains",
+    "image": "/media/dishes/yaichnaya-lapsha-s-tsyplyonkom.jpg",
+    "description": "В кисло-сладком соусе. Цыплёнок с лапшой в кисло-сладком соусе. Аппетитное сочетание хрустящей текстуры и яркого вкуса",
+    "weight": "330 г"
+  },
+  {
+    "id": "steyk-iz-lososya-s-brokkoli",
+    "name": "Стейк из лосося с брокколи",
+    "price": "63,00",
+    "category": "mains",
+    "description": "Стейк из лосося с брокколи — сочный лосось с гарниром из брокколи. Соус унаги и чатни из сладкого перца придают рыбе сладковатый оттенок. Соус дзадзики, зелёное масло, кунжут и укроп добавляют блюду свежесть и лёгкую пикантность",
+    "weight": "300 г",
+    "image": "/media/dishes/steyk-iz-lososya-s-brokkoli.jpg"
+  },
+  {
+    "id": "steyk-file-minon-s-kartofelnym-pyure",
+    "name": "Стейк филе-миньон с картофельным пюре",
+    "price": "59,00",
+    "category": "mains",
+    "description": "Стейк филе-миньон с картофельным пюре — нежная говядина с мягким пюре. Соус перечный и демиглас придают мясу насыщенный вкус. Зелёное масло и укроп добавляют блюду свежесть",
+    "weight": "300 г",
+    "image": "/media/dishes/steyk-file-minon-s-kartofelnym-pyure.jpg"
+  },
+  {
+    "id": "khrustyaschaya-struchkovaya-fasol-s-tsyplenkom-v-ostro-sladkom-souse",
+    "name": "Хрустящая стручковая фасоль с цыплёнком в остро-сладком соусе",
+    "price": "25,00",
+    "category": "mains",
+    "description": "Идеальный дуэт хруста и нежности: обжаренная до яркости фасоль с сочным цыплёнком в остро-сладком соусе",
+    "weight": "280 г",
+    "image": "/media/dishes/khrustyaschaya-struchkovaya-fasol-s-tsyplenkom-v-ostro-sladkom-souse.jpg"
+  },
+  {
+    "id": "khrustyaschiy-kalmar-v-souse-5-spetsiy",
+    "name": "Хрустящий кальмар в соусе 5 специй",
+    "price": "25,00",
+    "category": "mains",
+    "description": "Хрустящий кальмар в соусе пять специй — кальмар в лёгком тесте с аппетитной корочкой. Соус пять специй придаёт пикантность. Кунжут, кинза и перец чили добавляют блюду остроту и аромат",
+    "weight": "150 г",
+    "image": "/media/dishes/khrustyaschiy-kalmar-v-souse-5-spetsiy.jpg"
+  },
+  {
+    "id": "pasta-karbonara",
+    "name": "Паста Карбонара",
+    "price": "21,40",
+    "category": "mains",
+    "description": "Паста карбонара — нежная паста с яичной заправкой. В блюде — пикантный вкус пармезана. Соль подчёркивает гармонию ингредиентов",
+    "weight": "250 г",
+    "image": "/media/dishes/pasta-karbonara.jpg"
+  },
+  {
+    "id": "talyatelle-s-krevetkami",
+    "name": "Тальятелле с креветками",
+    "price": "33,00",
+    "category": "mains",
+    "description": "Тальятелле с креветками — нежная паста с сочными креветками. Томаты черри и томатный соус придают блюду свежесть. Сливочное масло, соус кимчи, пармезан и нити чили добавляют пикантность и лёгкую остроту",
+    "weight": "350 г",
+    "image": "/media/dishes/talyatelle-s-krevetkami.jpg"
+  },
+  {
+    "id": "nigiri-losos",
+    "name": "Нигири с лососем",
+    "price": "8,00",
+    "category": "nigiri",
+    "image": "/media/dishes/nigiri-losos.jpg",
+    "description": "Аккуратная порция риса, обёрнутая водорослями нори. Сверху — лосось и икра лососёвая. Сочетание придаёт блюду нежный и насыщенный вкус",
+    "weight": "40 г"
+  },
+  {
+    "id": "nigiri-tunets",
+    "name": "Нигири с тунцом",
+    "price": "7,00",
+    "category": "nigiri",
+    "image": "/media/dishes/nigiri-tunets.jpg",
+    "description": "Порция риса с ломтиком тунца сверху. Соус унаги добавляет сладковатый оттенок. Блюдо сочетает нежность тунца и лёгкую сладость соуса",
+    "weight": "40 г"
+  },
+  {
+    "id": "roll-bonito",
+    "name": "Ролл бонито",
+    "price": "32,00",
+    "category": "sushi",
+    "description": "Ролл с сочным слабосоленым лососем, сливочным сыром и освежающим огурцом, обваленный в ароматной стружке тунца бонито. Идеальный выбор для любителей насыщенных морских вкусов",
+    "weight": "200 г",
+    "image": "/media/dishes/roll-bonito.jpg"
+  },
+  {
+    "id": "roll-v-opalennom-tuntse-s-krevetkoy",
+    "name": "Ролл в опаленном тунце с креветкой",
+    "price": "30,00",
+    "category": "sushi",
+    "description": "Ролл с сочной креветкой, освежающим огурцом и хрустящим маринованным такуаном внутри. Сверху — опаленный пламенем тунец, политый соусами сладкий чили и терияки. Колечки свежего чили завершают этот обжигающе вкусный азиатский хит",
+    "weight": "240 г",
+    "image": "/media/dishes/roll-v-opalennom-tuntse-s-krevetkoy.jpg"
+  },
+  {
+    "id": "roll-v-ugre-s-avokado",
+    "name": "Ролл в угре с авокадо",
+    "price": "35,00",
+    "category": "sushi",
+    "description": "Ролл с двойной порцией нежного сливочного сыра и спелым авокадо в основе. Сверху покрывается сочными ломтиками копченого угря под пикантным соусом терияки. Финальный штрих — обжаренный кунжут, раскрывающий аромат Азии",
+    "weight": "245 г",
+    "image": "/media/dishes/roll-v-ugre-s-avokado.jpg"
+  },
+  {
+    "id": "roll-kaliforniya-s-tryufelnym-ayoli",
+    "name": "Ролл калифорния с трюфельным айоли",
+    "price": "32,00",
+    "category": "sushi",
+    "description": "Яркое сочетание вкусов в формате Калифорнии. Нежная креветка, авокадо и свежий огурец в хрустящей икре тобико. Главный штрих — ароматный трюфельный айоли, превращающий знакомый ролл в настоящее гастрономическое открытие",
+    "weight": "220 г"
+  },
+  {
+    "id": "roll-s-lososem-i-chuka-salatom-v-kunzhute",
+    "name": "Ролл с лососем и чука салатом в кунжуте",
+    "price": "27,00",
+    "category": "sushi",
+    "description": "Морская гармония вкусов и текстур. Ролл с начинкой из нежного лосося и сливочного сыра, покрытый сочным салатом чука. Оригинальная обсыпка из остро-сладкого кунжута кимчи придает блюду приятный хруст и пикантное послевкусие",
+    "weight": "200 г",
+    "image": "/media/dishes/roll-s-lososem-i-chuka-salatom-v-kunzhute.jpg"
+  },
+  {
+    "id": "roll-s-tartarom-iz-krevetki-i-lososya",
+    "name": "Ролл с тартаром из креветки и лосося",
+    "price": "32,00",
+    "category": "sushi",
+    "description": "Нежный ролл со сливочным сыром и хрустящим салатом айсберг в основе. Главная изюминка — сочная шапочка из тартара со слабосоленым лососем и тигровой креветкой. Пикантный соус спайси добавляет вкусу яркую азиатскую нотку",
+    "weight": "235 г"
+  },
+  {
+    "id": "roll-s-tuntsom-lososem-krevetkoy",
+    "name": "Ролл с тунцом, лососем, креветкой",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "Рис и нори с тунцом, лососем и креветкой. Авокадо добавляет свежесть, а кунжут — хрустящую текстуру. Трюфельный айоли и соус унаги придают насыщенный вкус",
+    "weight": "170 г",
+    "image": "/media/dishes/roll-s-tuntsom-lososem-krevetkoy.jpg"
+  },
+  {
+    "id": "filadelfiya-s-avokado",
+    "name": "Филадельфия с авокадо",
+    "price": "40,00",
+    "category": "sushi",
+    "description": "Легендарный ролл с толстым слоем нежного слабосоленого лосося, обволакивающим начинку из бархатистого творожного сыра и спелого авокадо. Декорируется красной икрой",
+    "weight": "240 г",
+    "image": "/media/dishes/filadelfiya-s-avokado.jpg"
+  },
+  {
+    "id": "tempura-s-karamelizirovannym-lososem",
+    "name": "Темпура с карамелизированным лососем",
+    "price": "31,00",
+    "category": "sushi",
+    "description": "Лосось с хрустящей карамельной корочкой в лёгком кляре темпура",
+    "weight": "250 г",
+    "image": "/media/dishes/tempura-s-karamelizirovannym-lososem.jpg"
+  },
+  {
+    "id": "tempura-s-krevetkoy-i-lososem",
+    "name": "Темпура с креветкой и лососем",
+    "price": "31,00",
+    "category": "sushi",
+    "description": "Хрустящая темпура с креветкой и лососем. Внутри — нежный рис, сливочный сыр, лосось и креветка. Сверху — аппетитная корочка из теста темпура и сухарей панко, вкус дополняют соусы унаги и сладкий чили",
+    "weight": "250 г",
+    "image": "/media/dishes/tempura-s-krevetkoy-i-lososem.jpg"
+  },
+  {
+    "id": "tempura-s-krevetkoy-i-mango",
+    "name": "Темпура с креветкой и манго",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "Креветки и манго в лёгком хрустящем кляре темпура. Подаётся с кисло-сладким соусом",
+    "weight": "250 г",
+    "image": "/media/dishes/tempura-s-krevetkoy-i-mango.jpg"
+  },
+  {
+    "id": "tempura-s-lososem-i-ogurtsom",
+    "name": "Темпура с лососем и огурцом",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "Лосось и ломтики свежего огурца в хрустящем кляре темпура подаются с лёгким соусом для макания",
+    "weight": "250 г",
+    "image": "/media/dishes/tempura-s-lososem-i-ogurtsom.jpg"
+  },
+  {
+    "id": "tempura-s-tartarom-iz-krevetki-i-lososya",
+    "name": "Темпура с тартаром из креветки и лосося",
+    "price": "31,50",
+    "category": "sushi",
+    "description": "Хрустящий горячий ролл в темпурной корочке с начинкой из нежного творожного сыра и освежающего огурца. Сверху выкладывается сочная шапочка из тартара со слабосоленым лососем и креветкой под пикантным соусом спайси и кунжутом",
+    "weight": "300 г",
+    "image": "/media/dishes/tempura-s-tartarom-iz-krevetki-i-lososya.jpg"
+  },
+  {
+    "id": "tempura-s-ugrem-i-ogurtsom",
+    "name": "Темпура с угрем и огурцом",
+    "price": "30,00",
+    "category": "sushi",
+    "description": "Горячий ролл в хрустящей темпурной корочке с начинкой из копченого угря, нежного творожного сыра и свежего огурца. Утонченный соус на основе трюфельного айоли придает блюду роскошный глубокий аромат и благородный вкус. Подается теплым",
+    "weight": "260 г",
+    "image": "/media/dishes/tempura-s-ugrem-i-ogurtsom.jpg"
+  },
+  {
+    "id": "zapechennyy-roll-s-tuntsom-i-chuka-salatom",
+    "name": "Запеченный ролл с тунцом и чука-салатом",
+    "price": "30,00",
+    "category": "sushi",
+    "description": "Горячий ролл с начинкой из сочного тунца, сливочного сыра и хрустящего салата чука под плотной запеченной сырной шапкой. Традиционный орехово-кунжутный соус придает блюду приятную сладость и насыщенный азиатский аромат",
+    "weight": "300 г"
+  },
+  {
+    "id": "zapechennaya-filadelfiya",
+    "name": "Запечённая Филадельфия",
+    "price": "36,60",
+    "category": "sushi",
+    "description": "Тёплый сырный ролл с нежным лососем, запечённый под соусом",
+    "weight": "290 г",
+    "image": "/media/dishes/zapechennaya-filadelfiya.jpg"
+  },
+  {
+    "id": "zapechennyy-roll-s-krevetkoy-i-mango",
+    "name": "Запечённый ролл с креветкой и манго",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "Запечённые роллы с тигровыми креветками, спелым манго и крем-чизом в тёплом ролле с хрустящей сырной корочкой",
+    "weight": "310 г",
+    "image": "/media/dishes/zapechennyy-roll-s-krevetkoy-i-mango.jpg"
+  },
+  {
+    "id": "zapechennyy-roll-s-lososem-i-avokado",
+    "name": "Запечённый ролл с лососем и авокадо",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "Нежный лосось и кремовое авокадо в тёплом ролле под пикантной сырной острой шапкой. Контраст хрустящей вершинки и мягкой начинки",
+    "weight": "310 г",
+    "image": "/media/dishes/zapechennyy-roll-s-lososem-i-avokado.jpg"
+  },
+  {
+    "id": "zapechennyy-roll-s-lososem-i-takuanom",
+    "name": "Запечённый ролл с лососем и такуаном",
+    "price": "29,00",
+    "category": "sushi",
+    "description": "Ролл с лососем и такуаном, запечённый до аппетитной корочки. Внутри — рис, такуан, лосось и сливочный сыр. Сверху — сырная шапка, соус спайси, трюфельные айоли и белый жареный кунжут, которые придают роллу яркий вкус и аромат",
+    "weight": "300 г",
+    "image": "/media/dishes/zapechennyy-roll-s-lososem-i-takuanom.jpg"
+  },
+  {
+    "id": "bezglyutenovyy-shokoladnyy-pirog",
+    "name": "Безглютеновый шоколадный пирог",
+    "price": "24,00",
+    "category": "desserts",
+    "description": "С глубиной и бархатистостью бельгийского шоколада",
+    "weight": "120 г",
+    "image": "/media/dishes/bezglyutenovyy-shokoladnyy-pirog.jpg"
+  },
+  {
+    "id": "sezonnyy-yaponskiy-moti",
+    "name": "Сезонный японский моти",
+    "price": "18,00",
+    "category": "desserts",
+    "description": "Рисовое тесто придаёт десерту нежную текстуру. Сливочный сыр и свежая голубика создают гармоничный вкусовой баланс, а сироп из клубники и ганаш из белого шоколада добавляют сладости и изысканности",
+    "weight": "120 г",
+    "image": "/media/dishes/sezonnyy-yaponskiy-moti.jpg"
+  },
+  {
+    "id": "vasabi",
+    "name": "Васаби",
+    "price": "2,00",
+    "category": "sousy",
+    "description": "Японский хрен васаби. Острая освежающая паста для суши",
+    "weight": "10 г",
+    "image": "/media/dishes/vasabi.jpg"
+  },
+  {
+    "id": "imbir-marinovannyy-rozovyy",
+    "name": "Имбирь маринованный розовый",
+    "price": "2,50",
+    "category": "sousy",
+    "description": "Освежающая приправа с острым сладковатым вкусом",
+    "weight": "20 г",
+    "image": "/media/dishes/imbir-marinovannyy-rozovyy.jpg"
+  },
+  {
+    "id": "soevyy-sous",
+    "name": "Соевый соус",
+    "price": "2,00",
+    "category": "sousy",
+    "description": "Традиционный азиатский соус",
+    "weight": "50 г",
+    "image": "/media/dishes/soevyy-sous.jpg"
+  },
+  {
+    "id": "sous-kunzhutnyy",
+    "name": "Соус Кунжутный",
+    "price": "2,50",
+    "category": "sousy",
+    "description": "Натуральная приправа, получаемая из семян кунжута. Обладает насыщенным ореховым вкусом и ароматом, который усиливается при обжарке",
+    "weight": "40 г",
+    "image": "/media/dishes/sous-kunzhutnyy.jpg"
+  },
+  {
+    "id": "sous-spaysi",
+    "name": "Соус Спайси",
+    "price": "2,50",
+    "category": "sousy",
+    "description": "Кремовый острый соус. Идеально сочетается с роллами и картофелем фри",
+    "weight": "40 г",
+    "image": "/media/dishes/sous-spaysi.jpg"
+  },
+  {
+    "id": "sous-teriyaki",
+    "name": "Соус Терияки",
+    "price": "2,50",
+    "category": "sousy",
+    "description": "Сладко-солёный японский соус",
+    "weight": "40 г",
+    "image": "/media/dishes/sous-teriyaki.jpg"
+  },
+  {
+    "id": "sous-unagi",
+    "name": "Соус Унаги",
+    "price": "2,50",
+    "category": "sousy",
+    "description": "Густой сладко-солёный соус с карамельным блеском",
+    "weight": "40 г",
+    "image": "/media/dishes/sous-unagi.jpg"
+  },
+  {
+    "id": "sous-sladkiy-chili",
+    "name": "Соус сладкий чили",
+    "price": "2,50",
+    "category": "sousy",
+    "description": "Тайский сладкий соус чили. Идеальный баланс сладости, лёгкой остроты и освежающей кислинки",
+    "weight": "40 г",
+    "image": "/media/dishes/sous-sladkiy-chili.jpg"
+  },
+  {
+    "id": "voda-negazirovannaya-bonakva",
+    "name": "Вода негазированная БонАква",
+    "price": "4,00",
+    "category": "napitki",
+    "description": "Вода питьевая обладает нейтральным вкусом",
+    "weight": "500 г",
+    "image": "/media/dishes/voda-negazirovannaya-bonakva.jpg"
+  },
+  {
+    "id": "voda-srednegazirovannaya-bonakva",
+    "name": "Вода среднегазированная Бонаква",
+    "price": "4,00",
+    "category": "napitki",
+    "description": "Вода питьевая среднегазированная обладает легкой освежающей текстурой",
+    "weight": "500 г",
+    "image": "/media/dishes/voda-srednegazirovannaya-bonakva.jpg"
+  },
+  {
+    "id": "napitok-gazirovannyy-koka-kola",
+    "name": "Напиток газированный Кока-Кола",
+    "price": "4,50",
+    "category": "napitki",
+    "description": "Газированный безалкогольный напиток со сладким ароматом и мягким вкусом ванили",
+    "weight": "500 г",
+    "image": "/media/dishes/napitok-gazirovannyy-koka-kola.jpg"
+  },
+  {
+    "id": "napitok-gazirovannyy-koka-kola-bez-sakhara",
+    "name": "Напиток газированный Кока-Кола без сахара",
+    "price": "4,50",
+    "category": "napitki",
+    "description": "Газированный безалкогольный напиток со сладким ароматом и мягким вкусом ванили, без сахара",
+    "weight": "500 г",
+    "image": "/media/dishes/napitok-gazirovannyy-koka-kola-bez-sakhara.jpg"
+  },
+  {
+    "id": "napitok-gazirovannyy-sprayt",
+    "name": "Напиток газированный Спрайт",
+    "price": "4,50",
+    "category": "napitki",
+    "description": "Газированный безалкогольный напиток со вкусом лайма и лимона",
+    "weight": "500 г",
+    "image": "/media/dishes/napitok-gazirovannyy-sprayt.jpg"
+  },
+  {
+    "id": "napitok-gazirovannyy-fanta",
+    "name": "Напиток газированный Фанта",
+    "price": "4,50",
+    "category": "napitki",
+    "description": "Газированный безалкогольный напиток со вкусом апельсина",
+    "weight": "500 г",
+    "image": "/media/dishes/napitok-gazirovannyy-fanta.jpg"
+  },
+  {
+    "id": "sok-rich-apelsinovyy",
+    "name": "Сок Rich апельсиновый",
+    "price": "16,00",
+    "category": "napitki",
+    "description": "Изготовлен из концентрированного апельсинового сока",
+    "weight": "1 г",
+    "image": "/media/dishes/sok-rich-apelsinovyy.jpg"
+  },
+  {
+    "id": "sok-rich-vishnevyy",
+    "name": "Сок Rich вишнёвый",
+    "price": "16,00",
+    "category": "napitki",
+    "description": "Изготовлен из концентрированного сока. Минимальная объемная доля сока 32%",
+    "weight": "1 г",
+    "image": "/media/dishes/sok-rich-vishnevyy.jpg"
+  },
+  {
+    "id": "sok-rich-greypfrutovyy",
+    "name": "Сок Rich грейпфрутовый",
+    "price": "16,00",
+    "category": "napitki",
+    "description": "Изготовлен из грейпфрутового восстановленного пастеризованного сока",
+    "weight": "1 г",
+    "image": "/media/dishes/sok-rich-greypfrutovyy.jpg"
+  },
+  {
+    "id": "sok-rich-multifruktovyy",
+    "name": "Сок Rich мультифруктовый",
+    "price": "16,00",
+    "category": "napitki",
+    "description": "Изготовлен из концентрированных соков и пюре",
+    "weight": "1 г",
+    "image": "/media/dishes/sok-rich-multifruktovyy.jpg"
+  },
+  {
+    "id": "sok-rich-tomatnyy",
+    "name": "Сок Rich томатный",
+    "price": "16,00",
+    "category": "napitki",
+    "description": "Томатный сок с солью восстановленный с мякотью, гомогенизированный, стерилизованный",
+    "weight": "1 г",
+    "image": "/media/dishes/sok-rich-tomatnyy.jpg"
+  },
+  {
+    "id": "sok-rich-yablochnyy",
+    "name": "Сок Rich яблочный",
+    "price": "16,00",
+    "category": "napitki",
+    "description": "Изготовлен из восстановленного осветленного пастеризованного сока",
+    "weight": "1 г",
+    "image": "/media/dishes/sok-rich-yablochnyy.jpg"
+  }
+]

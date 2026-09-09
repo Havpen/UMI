@@ -189,29 +189,40 @@ export function isHoneypot(website: unknown): boolean {
   return String(website ?? "").trim() !== "";
 }
 
-export function validateCommentField(comment: string): string | null {
+export type FieldError =
+  | "commentLong"
+  | "noLinks"
+  | "noProfanity"
+  | "needName"
+  | "nameLong"
+  | "nameOneWord"
+  | "needPhone"
+  | "phoneLong"
+  | "phoneFormat";
+
+export function validateCommentField(comment: string): FieldError | null {
   const t = comment.trim();
   if (!t) return null;
-  if (t.length > COMMENT_MAX) return "Комментарий слишком длинный";
-  if (containsLink(t)) return "В комментарии нельзя указывать ссылки";
-  if (containsProfanity(t)) return "Пожалуйста, без грубых слов — напишите иначе";
+  if (t.length > COMMENT_MAX) return "commentLong";
+  if (containsLink(t)) return "noLinks";
+  if (containsProfanity(t)) return "noProfanity";
   return null;
 }
 
-export function validateGuestName(name: string): string | null {
+export function validateGuestName(name: string): FieldError | null {
   const n = name.trim();
-  if (n.length < 2) return "Укажите имя";
-  if (n.length > 40) return "Имя слишком длинное";
-  if (containsLink(n)) return "В имени нельзя указывать ссылки";
-  if (containsProfanity(n)) return "Пожалуйста, без грубых слов — напишите иначе";
+  if (n.length < 2) return "needName";
+  if (n.length > 40) return "nameLong";
+  if (containsLink(n)) return "noLinks";
+  if (containsProfanity(n)) return "noProfanity";
   return null;
 }
 
-export function validateTakeawayName(name: string): string | null {
+export function validateTakeawayName(name: string): FieldError | null {
   const n = name.trim();
   const base = validateGuestName(n);
   if (base) return base;
-  if (/\s/.test(n)) return "Имя — одно слово, без пробелов";
+  if (/\s/.test(n)) return "nameOneWord";
   return null;
 }
 
@@ -227,10 +238,10 @@ export function sanitizePhoneInput(raw: string): string {
   return out;
 }
 
-export function validatePhone(phone: string): string | null {
+export function validatePhone(phone: string): FieldError | null {
   const p = phone.trim();
-  if (!p) return "Укажите телефон";
-  if (p.length > 13) return "Телефон: максимум 13 символов";
-  if (!/^\+?\d+$/.test(p)) return "Только цифры, «+» можно поставить в начале";
+  if (!p) return "needPhone";
+  if (p.length > 13) return "phoneLong";
+  if (!/^\+?\d+$/.test(p)) return "phoneFormat";
   return null;
 }

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useCopy } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale";
 
 function pad(value: number) {
   return String(value).padStart(2, "0");
@@ -38,6 +40,8 @@ export function TimeField({
   defaultValue?: string;
   step?: number;
 }) {
+  const t = useCopy();
+  const { locale } = useLocale();
   const [desktop, setDesktop] = useState(false);
   const options = useMemo(() => slots(min, max, step), [min, max, step]);
   const fallback = options[0] ?? "12:00";
@@ -69,7 +73,7 @@ export function TimeField({
         required
         name={name}
         type="time"
-        lang="ru"
+        lang={locale}
         min={min}
         max={max === "00:00" ? "23:59" : max}
         defaultValue={start}
@@ -82,7 +86,7 @@ export function TimeField({
     <div className="grid w-full min-w-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1.5">
       <select
         required
-        aria-label="Часы"
+        aria-label={t.hoursAria}
         value={hour}
         className={selectClass}
         onChange={(event) => setHour(event.target.value)}
@@ -98,7 +102,7 @@ export function TimeField({
       </span>
       <select
         required
-        aria-label="Минуты"
+        aria-label={t.minutesAria}
         value={minuteList.includes(minute) ? minute : minuteList[0]}
         className={selectClass}
         onChange={(event) => setValue(`${hour}:${event.target.value}`)}

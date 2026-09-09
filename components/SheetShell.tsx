@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useRef } from "react";
+import { useCopy } from "@/lib/i18n";
 
 function fitPanel(layer: HTMLElement, panel: HTMLElement, inner: HTMLElement) {
   const vv = window.visualViewport;
@@ -47,6 +48,7 @@ export function SheetShell({
   fitKey?: string | number;
   children: ReactNode;
 }) {
+  const t = useCopy();
   const layerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
@@ -80,7 +82,7 @@ export function SheetShell({
       <button
         type="button"
         className={`booking-backdrop absolute inset-0 bg-[rgba(44,39,35,0.28)] ${visible ? "is-on" : ""}`}
-        aria-label="Закрыть"
+        aria-label={t.close}
         onClick={onClose}
       />
       <div ref={panelRef} className={`glass booking-panel ${visible ? "is-on" : ""}`}>

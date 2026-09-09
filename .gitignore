@@ -9,8 +9,10 @@ preview
 tmp-preview
 tmp-clever-dishes.json
 .api-export-tmp
+.admin-export-tmp
 .pages-build
 assets/*.MOV
 *.log
 **/__pycache__/
 *.tsbuildinfo
+.codegraph/

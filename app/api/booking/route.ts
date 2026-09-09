@@ -1,11 +1,37 @@
-import { NextResponse } from "next/server";
 import { isHoneypot, sanitizePhoneInput, validateCommentField, validateGuestName, validatePhone } from "@/lib/commentModeration";
+import { clientIp, isSameSiteRequest, jsonNoStore, rateLimit, readJsonBody } from "@/lib/httpGuard";
+import { isClockTime, isVisitDate, parsePartySize } from "@/lib/leadFields";
 import { addLead, formatLeadHtml, notifyTelegram } from "@/lib/leads";
 
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+type BookingBody = {
+  website?: unknown;
+  name?: unknown;
+  phone?: unknown;
+  date?: unknown;
+  time?: unknown;
+  guests?: unknown;
+  comment?: unknown;
+};
+
 export async function POST(request: Request) {
-  const body = await request.json();
+  if (!isSameSiteRequest(request)) {
+    return jsonNoStore({ ok: false }, 403);
+  }
+  const ip = clientIp(request);
+  if (!rateLimit(`lead:${ip}`, 8, 10 * 60 * 1000) || !rateLimit("lead:global", 40, 10 * 60 * 1000)) {
+    return jsonNoStore({ ok: false }, 429);
+  }
+
+  const parsed = await readJsonBody<BookingBody>(request);
+  if ("error" in parsed) {
+    return jsonNoStore({ ok: false }, 400);
+  }
+  const body = parsed.data;
   if (isHoneypot(body.website)) {
-    return NextResponse.json({ ok: true });
+    return jsonNoStore({ ok: true });
   }
 
   const name = String(body.name ?? "").trim();
@@ -13,21 +39,25 @@ export async function POST(request: Request) {
   const date = String(body.date ?? "").trim();
   const time = String(body.time ?? "").trim();
   const comment = String(body.comment ?? "").trim();
-  if (!name || !phone || !date || !time) {
-    return NextResponse.json({ ok: false }, { status: 400 });
+  const guests = parsePartySize(String(body.guests ?? ""));
+  if (!name || !phone || !date || !time || !guests) {
+    return jsonNoStore({ ok: false }, 400);
+  }
+  if (!isVisitDate(date) || !isClockTime(time)) {
+    return jsonNoStore({ ok: false }, 400);
   }
 
   const nameError = validateGuestName(name);
   if (nameError) {
-    return NextResponse.json({ ok: false, error: nameError }, { status: 400 });
+    return jsonNoStore({ ok: false, error: nameError }, 400);
   }
   const phoneError = validatePhone(phone);
   if (phoneError) {
-    return NextResponse.json({ ok: false, error: phoneError }, { status: 400 });
+    return jsonNoStore({ ok: false, error: phoneError }, 400);
   }
   const commentError = validateCommentField(comment);
   if (commentError) {
-    return NextResponse.json({ ok: false, error: commentError }, { status: 400 });
+    return jsonNoStore({ ok: false, error: commentError }, 400);
   }
 
   const lead = await addLead({
@@ -38,18 +68,18 @@ export async function POST(request: Request) {
     phone,
     date,
     time,
-    guests: String(body.guests ?? "").trim(),
+    guests,
     comment,
   });
 
   const telegram = await notifyTelegram(formatLeadHtml(lead));
   if (telegram.reason === "missing-env") {
     console.info(formatLeadHtml(lead));
-    return NextResponse.json({ ok: true, queued: "log" });
+    return jsonNoStore({ ok: true, queued: "log" });
   }
   if (!telegram.sent) {
-    return NextResponse.json({ ok: false }, { status: 502 });
+    return jsonNoStore({ ok: false }, 502);
   }
 
-  return NextResponse.json({ ok: true });
+  return jsonNoStore({ ok: true });
 }

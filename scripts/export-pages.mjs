@@ -5,7 +5,9 @@ import path from "node:path";
 
 const root = process.cwd();
 const api = path.join(root, "app", "api");
-const parked = path.join(root, ".api-export-tmp");
+const admin = path.join(root, "app", "admin");
+const parkedApi = path.join(root, ".api-export-tmp");
+const parkedAdmin = path.join(root, ".admin-export-tmp");
 const shadow = path.join(path.dirname(root), `${path.basename(root)}-pages-build`);
 const skip = new Set([
   "node_modules",
@@ -18,7 +20,9 @@ const skip = new Set([
   "assets",
   ".pages-build",
   ".api-export-tmp",
+  ".admin-export-tmp",
   "tmp-preview",
+  "bot",
 ]);
 
 function run(command, args, cwd = root) {
@@ -39,16 +43,29 @@ function run(command, args, cwd = root) {
 process.env.GITHUB_PAGES = "true";
 process.env.NEXT_PUBLIC_SITE_URL ??= "https://havpen.github.io/UMI";
 
-async function parkApi() {
-  if (!existsSync(api) && existsSync(parked)) await rename(parked, api);
-  if (existsSync(parked)) await rm(parked, { recursive: true, force: true });
+async function parkDir(from, to) {
+  if (!existsSync(from) && existsSync(to)) await rename(to, from);
+  if (existsSync(to)) await rm(to, { recursive: true, force: true });
+  if (!existsSync(from)) return "missing";
   try {
-    await rename(api, parked);
+    await rename(from, to);
     return "moved";
   } catch (err) {
     if (err && (err.code === "EXDEV" || err.code === "EPERM")) return "locked";
     throw err;
   }
+}
+
+async function unparkDir(from, to) {
+  if (existsSync(to) && !existsSync(from)) await rename(to, from);
+}
+
+async function parkDynamic() {
+  const apiMode = await parkDir(api, parkedApi);
+  const adminMode = await parkDir(admin, parkedAdmin);
+  if (apiMode === "locked" || adminMode === "locked") return "locked";
+  if (apiMode === "moved" || adminMode === "moved") return "moved";
+  return "missing";
 }
 
 function exportedDir(from) {
@@ -74,6 +91,7 @@ async function buildInShadow() {
     },
   });
   await rm(path.join(shadow, "app", "api"), { recursive: true, force: true });
+  await rm(path.join(shadow, "app", "admin"), { recursive: true, force: true });
   await symlink(
     path.join(root, "node_modules"),
     path.join(shadow, "node_modules"),
@@ -88,7 +106,7 @@ async function buildInShadow() {
   await rm(shadow, { recursive: true, force: true });
 }
 
-const mode = await parkApi();
+const mode = await parkDynamic();
 try {
   if (mode === "moved") {
     await run("npx", ["next", "build"]);
@@ -97,5 +115,6 @@ try {
     await buildInShadow();
   }
 } finally {
-  if (mode === "moved" && existsSync(parked)) await rename(parked, api);
+  await unparkDir(api, parkedApi);
+  await unparkDir(admin, parkedAdmin);
 }

@@ -3,6 +3,7 @@
 import { forwardRef, useCallback, useEffect, useRef } from "react";
 
 type Axis = "x" | "y" | null;
+type Sample = { t: number; x: number };
 
 type Props = {
   children: React.ReactNode;
@@ -15,6 +16,12 @@ type Props = {
 type Anim = { frame: number; active: boolean };
 
 const anims = new WeakMap<HTMLElement, Anim>();
+const COAST_FRICTION = 0.0028;
+const COAST_MIN_VELOCITY = 0.06;
+const COAST_MAX_VELOCITY = 2.6;
+const SNAP_FLICK_VELOCITY = 0.1;
+const SETTLE_OMEGA = 0.0054;
+const SETTLE_ZETA = 1.5;
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -36,40 +43,84 @@ export function cancelScrollAnim(node: HTMLElement) {
   anim.active = false;
 }
 
-function easeOutQuint(t: number) {
-  return 1 - (1 - t) ** 5;
+function maxScrollLeft(node: HTMLElement) {
+  return Math.max(0, node.scrollWidth - node.clientWidth);
 }
 
-export function animateScrollLeft(node: HTMLElement, left: number) {
+function releaseVelocity(samples: Sample[], now: number, lastX: number) {
+  const recent = samples.filter((sample) => now - sample.t <= 90);
+  if (!recent.length) return 0;
+  const first = recent[0];
+  const dt = now - first.t;
+  if (dt < 12) return 0;
+  return Math.max(-COAST_MAX_VELOCITY, Math.min(COAST_MAX_VELOCITY, -(lastX - first.x) / dt));
+}
+
+function settleScrollLeft(node: HTMLElement, target: number, velocity = 0) {
   const anim = getAnim(node);
   cancelAnimationFrame(anim.frame);
-  const start = node.scrollLeft;
-  const delta = left - start;
-  if (Math.abs(delta) < 2) {
-    anim.active = false;
-    return;
-  }
-  if (prefersReducedMotion()) {
-    node.scrollLeft = left;
+  const max = maxScrollLeft(node);
+  const end = Math.max(0, Math.min(max, target));
+  let x = node.scrollLeft;
+  let v = velocity;
+
+  if (Math.abs(end - x) < 0.5 && Math.abs(v) < 0.02) {
+    node.scrollLeft = end;
     anim.active = false;
     return;
   }
 
+  if (prefersReducedMotion()) {
+    node.scrollLeft = end;
+    anim.active = false;
+    return;
+  }
+
+  const delta = end - x;
+  if (v * delta > 0) {
+    const cap = Math.abs(delta) * SETTLE_OMEGA * 2.4 + 0.28;
+    if (Math.abs(v) > cap) v = Math.sign(v) * cap;
+  }
+
+  let last = performance.now();
   anim.active = true;
-  const duration = Math.min(780, Math.max(540, 400 + Math.abs(delta) * 0.95));
-  const t0 = performance.now();
 
   const tick = (now: number) => {
-    const t = Math.min(1, (now - t0) / duration);
-    node.scrollLeft = start + delta * easeOutQuint(t);
-    if (t < 1) {
-      anim.frame = requestAnimationFrame(tick);
-    } else {
-      anim.active = false;
+    const dt = Math.min(32, now - last);
+    last = now;
+    const acc = -SETTLE_OMEGA * SETTLE_OMEGA * (x - end) - 2 * SETTLE_ZETA * SETTLE_OMEGA * v;
+    v += acc * dt;
+    x += v * dt;
+
+    if (x <= 0) {
+      x = 0;
+      v = 0;
+    } else if (x >= max) {
+      x = max;
+      v = 0;
     }
+
+    node.scrollLeft = x;
+
+    if (Math.abs(end - x) < 0.3 && Math.abs(v) < 0.012) {
+      node.scrollLeft = end;
+      anim.active = false;
+      return;
+    }
+    anim.frame = requestAnimationFrame(tick);
   };
 
   anim.frame = requestAnimationFrame(tick);
+}
+
+function coastScrollLeft(node: HTMLElement, velocity: number) {
+  if (Math.abs(velocity) < COAST_MIN_VELOCITY) return;
+  const target = node.scrollLeft + velocity / COAST_FRICTION;
+  settleScrollLeft(node, target, velocity);
+}
+
+export function animateScrollLeft(node: HTMLElement, left: number) {
+  settleScrollLeft(node, left, 0);
 }
 
 function cardLeft(node: HTMLElement, card: HTMLElement) {
@@ -77,27 +128,58 @@ function cardLeft(node: HTMLElement, card: HTMLElement) {
 }
 
 export function scrollToCard(node: HTMLElement, index: number) {
-  const items = [...node.querySelectorAll<HTMLElement>("[data-card]")];
+  const items = cardsOf(node);
   const card = items[Math.max(0, Math.min(items.length - 1, index))];
   if (!card) return;
   animateScrollLeft(node, cardLeft(node, card));
 }
 
-function snapToCenter(node: HTMLElement) {
-  if (getAnim(node).active) return;
-  const items = [...node.querySelectorAll<HTMLElement>("[data-card]")];
-  if (!items.length) return;
-  const mid = node.scrollLeft + node.clientWidth / 2;
-  let best = items[0];
+function cardsOf(node: HTMLElement) {
+  return [...node.querySelectorAll<HTMLElement>("[data-card]")];
+}
+
+function indexAtCenter(node: HTMLElement, left: number, items: HTMLElement[]) {
+  const mid = left + node.clientWidth / 2;
+  let best = 0;
   let bestDist = Infinity;
-  for (const item of items) {
+  items.forEach((item, index) => {
     const dist = Math.abs(item.offsetLeft + item.offsetWidth / 2 - mid);
     if (dist < bestDist) {
       bestDist = dist;
-      best = item;
+      best = index;
     }
+  });
+  return best;
+}
+
+function snapToCenter(node: HTMLElement, fromLeft = node.scrollLeft) {
+  if (getAnim(node).active) return;
+  const items = cardsOf(node);
+  if (!items.length) return;
+  animateScrollLeft(node, cardLeft(node, items[indexAtCenter(node, fromLeft, items)]));
+}
+
+function snapAfterDrag(node: HTMLElement, startScroll: number, velocity: number) {
+  const items = cardsOf(node);
+  if (!items.length) return;
+
+  const from = indexAtCenter(node, startScroll, items);
+  const nearest = indexAtCenter(node, node.scrollLeft, items);
+  const card = items[from];
+  const dragged = node.scrollLeft - startScroll;
+  const threshold = Math.max(28, Math.min(node.clientWidth * 0.08, card.offsetWidth * 0.18));
+  let next = from;
+
+  if (Math.abs(nearest - from) > 1) {
+    next = nearest;
+  } else if (velocity > SNAP_FLICK_VELOCITY || dragged > threshold) {
+    next = from + 1;
+  } else if (velocity < -SNAP_FLICK_VELOCITY || dragged < -threshold) {
+    next = from - 1;
   }
-  animateScrollLeft(node, cardLeft(node, best));
+
+  next = Math.max(0, Math.min(items.length - 1, next));
+  settleScrollLeft(node, cardLeft(node, items[next]), velocity);
 }
 
 export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
@@ -112,6 +194,8 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
     startX: 0,
     startY: 0,
     startScroll: 0,
+    lastX: 0,
+    samples: [] as Sample[],
   });
 
   const setRefs = useCallback(
@@ -135,7 +219,17 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
       if (node?.hasPointerCapture(event.pointerId)) {
         node.releasePointerCapture(event.pointerId);
       }
-      if (wasHorizontal && snap === "center" && node) snapToCenter(node);
+      if (wasHorizontal && node) {
+        const now = performance.now();
+        const x = Number.isFinite(event.clientX) ? event.clientX : drag.current.lastX;
+        drag.current.samples.push({ t: now, x });
+        const velocity = releaseVelocity(drag.current.samples, now, x);
+        if (snap === "center") {
+          snapAfterDrag(node, drag.current.startScroll, velocity);
+        } else {
+          coastScrollLeft(node, velocity);
+        }
+      }
     },
     [snap],
   );
@@ -200,6 +294,8 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
           startX: event.clientX,
           startY: event.clientY,
           startScroll: node.scrollLeft,
+          lastX: event.clientX,
+          samples: [{ t: performance.now(), x: event.clientX }],
         };
       }}
       onPointerMove={(event) => {
@@ -223,6 +319,11 @@ export const HScroll = forwardRef<HTMLDivElement, Props>(function HScroll(
         }
         if (drag.current.axis !== "x") return;
         if (Math.abs(dx) > 14) drag.current.moved = true;
+        const now = performance.now();
+        drag.current.lastX = event.clientX;
+        drag.current.samples.push({ t: now, x: event.clientX });
+        const samples = drag.current.samples;
+        while (samples.length > 1 && now - samples[0].t > 90) samples.shift();
         node.scrollLeft = drag.current.startScroll - dx;
       }}
       onPointerUp={canDrag ? endDrag : undefined}

@@ -1,6 +1,10 @@
+"use client";
+
 import { asset } from "@/lib/asset";
+import { useCopy } from "@/lib/i18n";
 
 export function BynSign({ className = "" }: { className?: string }) {
+  const t = useCopy();
   const mask = `url(${asset("/brand/byn-sign.png")}?v=1)`;
   return (
     <span
@@ -15,7 +19,7 @@ export function BynSign({ className = "" }: { className?: string }) {
         WebkitMaskPosition: "center",
         maskPosition: "center",
       }}
-      aria-label="белорусский рубль"
+      aria-label={t.byn}
       role="img"
     />
   );

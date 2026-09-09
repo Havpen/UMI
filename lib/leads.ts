@@ -33,6 +33,17 @@ export type Lead = BookingLead | TakeawayLead;
 type Store = { leads: Lead[] };
 
 const storeFile = () => path.join(process.cwd(), "data", "leads.json");
+const MAX_STORED_LEADS = 2000;
+let writeChain = Promise.resolve();
+
+function withLock<T>(fn: () => Promise<T>) {
+  const run = writeChain.then(fn, fn);
+  writeChain = run.then(
+    () => undefined,
+    () => undefined,
+  );
+  return run;
+}
 
 function esc(value: string) {
   return value
@@ -72,14 +83,19 @@ async function load(): Promise<Store> {
 
 async function save(store: Store) {
   await mkdir(path.dirname(storeFile()), { recursive: true });
+  if (store.leads.length > MAX_STORED_LEADS) {
+    store.leads = store.leads.slice(-MAX_STORED_LEADS);
+  }
   await writeFile(storeFile(), `${JSON.stringify(store, null, 2)}\n`, "utf8");
 }
 
 export async function addLead(lead: Lead) {
-  const store = await load();
-  store.leads.push(lead);
-  await save(store);
-  return lead;
+  return withLock(async () => {
+    const store = await load();
+    store.leads.push(lead);
+    await save(store);
+    return lead;
+  });
 }
 
 export async function listLeads() {
@@ -164,9 +180,10 @@ export function formatToday(leads: Lead[]) {
 
   const lines = rows.slice(-20).map((lead) => {
     if (lead.kind === "booking") {
-      return `• Бронь ${minskStamp(lead.at)} — ${lead.name}, ${lead.phone}, ${lead.date} ${lead.time}, ${lead.guests} гост.`;
+      return `• Бронь ${esc(minskStamp(lead.at))} — ${esc(lead.name)}, ${esc(lead.phone)}, ${esc(lead.date)} ${esc(lead.time)}, ${esc(lead.guests)} гост.`;
     }
-    return `• Вынос ${minskStamp(lead.at)} — ${lead.name ? `${lead.name}, ` : ""}${lead.phone}, к ${lead.time}, ${lead.persons || "?"} персон, ${lead.sum} Br`;
+    const who = lead.name ? `${esc(lead.name)}, ` : "";
+    return `• Вынос ${esc(minskStamp(lead.at))} — ${who}${esc(lead.phone)}, к ${esc(lead.time)}, ${esc(lead.persons || "?")} персон, ${esc(lead.sum)} Br`;
   });
 
   return ["<b>Сегодня с сайта</b>", ...lines].join("\n");
@@ -176,22 +193,29 @@ export async function notifyTelegram(text: string) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   const chatId = process.env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) return { sent: false, reason: "missing-env" as const };
-
-  const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text,
-      parse_mode: "HTML",
-    }),
-  });
-
-  if (!response.ok) {
-    const details = await response.text();
-    console.error("Telegram sendMessage failed", response.status, details);
+  if (/\s/.test(token) || token.length > 120 || !/^(-?\d+|@[\w]+)$/.test(chatId)) {
     return { sent: false, reason: "telegram" as const };
   }
 
-  return { sent: true as const };
+  try {
+    const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+        parse_mode: "HTML",
+      }),
+      signal: AbortSignal.timeout(10_000),
+    });
+
+    if (!response.ok) {
+      console.error("Telegram sendMessage failed", response.status);
+      return { sent: false, reason: "telegram" as const };
+    }
+
+    return { sent: true as const };
+  } catch {
+    return { sent: false, reason: "telegram" as const };
+  }
 }

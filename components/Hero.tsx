@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { asset } from "@/lib/asset";
-import { site } from "@/lib/content";
+import { useCopy } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale";
 import { navHref } from "@/lib/paths";
 import { track, useBooking } from "./booking";
 
@@ -19,6 +20,8 @@ function fitHeroInner(disk: HTMLElement, inner: HTMLElement) {
 
 export function Hero() {
   const { setOpen } = useBooking();
+  const { locale } = useLocale();
+  const t = useCopy();
   const videoRef = useRef<HTMLVideoElement>(null);
   const diskRef = useRef<HTMLDivElement>(null);
 
@@ -33,7 +36,7 @@ export function Hero() {
     void document.fonts?.ready.then(fit);
     fit();
     return () => observer.disconnect();
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -63,6 +66,8 @@ export function Hero() {
         src={`${asset("/media/hero-poster.jpg")}?v=2`}
         alt=""
         className="absolute inset-0 h-full w-full object-cover"
+        fetchPriority="high"
+        decoding="async"
       />
       <video
         ref={videoRef}
@@ -81,7 +86,7 @@ export function Hero() {
         <source src={`${asset("/media/hero.mp4")}?v=2`} type="video/mp4" />
         <source src={`${asset("/media/hero.webm")}?v=2`} type="video/webm" />
       </video>
-      <div className="absolute inset-0 bg-gradient-to-t from-[rgba(244,239,230,0.4)] via-transparent to-[rgba(244,239,230,0.08)]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-paper/40 via-transparent to-paper/8" />
 
       <div className="relative z-10 h-full">
         <div ref={diskRef} className="hero-disk glass">
@@ -92,28 +97,32 @@ export function Hero() {
               width={1329}
               height={799}
               className="hero-logo"
+              fetchPriority="high"
+              decoding="async"
             />
             <div className="hero-copy">
-              <h1>{site.h1}.</h1>
+              <h1>{t.h1}.</h1>
               <p className="hero-tag text-ink-soft">
-                Искусство баланса
+                {t.taglineLine1}
                 <br />
-                между Востоком и Европой.
+                {t.taglineLine2}
               </p>
-              <button
-                type="button"
-                className="hero-book hover-grow"
-                onClick={() => {
-                  track("click_booking_cta");
-                  track("booking_open");
-                  setOpen(true);
-                }}
-              >
-                Забронировать стол
-              </button>
-              <Link href={navHref("/menu")} className="hero-takeaway hover-grow text-ink-soft hover:text-ink">
-                Заказать на вынос
-              </Link>
+              <div className="hero-cta">
+                <button
+                  type="button"
+                  className="hero-book"
+                  onClick={() => {
+                    track("click_booking_cta");
+                    track("booking_open");
+                    setOpen(true);
+                  }}
+                >
+                  {t.bookTable}
+                </button>
+                <Link href={navHref("/menu")} className="hero-takeaway">
+                  {t.takeawayCta}
+                </Link>
+              </div>
             </div>
           </div>
         </div>

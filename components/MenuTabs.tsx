@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { HScroll } from "./HScroll";
-import { menuCategories } from "@/lib/content";
+import { localizeCategory, useCopy } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale";
 import { navHref } from "@/lib/paths";
 import Link from "next/link";
 
@@ -12,22 +13,28 @@ function tabClass(active: boolean) {
   }`;
 }
 
-const tabs = [
-  { id: "hits", href: "/menu", label: "Все хиты" },
-  ...menuCategories.map((cat) => ({ id: cat.id, href: cat.href, label: cat.title })),
-  { id: "lunch", href: "/lunch", label: "Ланч" },
-  { id: "brunch", href: "/brunch", label: "Бранч" },
-];
-
 export function MenuTabs({
   current,
+  categories,
   onSelect,
 }: {
   current?: string;
+  categories: { id: string; href: string; title: string; titleEn?: string; h1?: string; h1En?: string }[];
   onSelect?: (id: string, href: string) => void;
 }) {
+  const t = useCopy();
+  const { locale } = useLocale();
   const wrapRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const tabs = [
+    { id: "hits", href: "/menu", label: t.allHits },
+    ...categories.map((cat) => {
+      const localized = localizeCategory(cat, locale);
+      return { id: cat.id, href: cat.href, label: localized.title };
+    }),
+    { id: "lunch", href: "/lunch", label: t.navLunch },
+    { id: "brunch", href: "/brunch", label: t.navBrunch },
+  ];
 
   const updateFade = useCallback(() => {
     const wrap = wrapRef.current;
