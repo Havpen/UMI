@@ -8,7 +8,7 @@ import { MapBand } from "@/components/MapBand";
 import { getPublicMenu } from "@/lib/hallMenuData";
 import { seo } from "@/lib/content";
 
-export const dynamic = process.env.GITHUB_PAGES === "true" ? "force-static" : "force-dynamic";
+export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   title: seo["/"].title,

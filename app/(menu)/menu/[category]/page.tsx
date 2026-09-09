@@ -5,7 +5,7 @@ import { getPublicMenu } from "@/lib/hallMenuData";
 
 type Props = { params: Promise<{ category: string }> };
 
-export const dynamicParams = process.env.GITHUB_PAGES !== "true";
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return menuCategories.map((cat) => ({ category: cat.id }));

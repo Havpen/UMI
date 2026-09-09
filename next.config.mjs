@@ -65,12 +65,16 @@ const nextConfig = {
     NEXT_PUBLIC_BASE_PATH: basePath,
     NEXT_PUBLIC_STATIC: isPages ? "1" : "",
   },
-  serverExternalPackages: ["ffmpeg-static"],
-  experimental: {
-    serverActions: {
-      bodySizeLimit: "1mb",
-    },
-  },
+  serverExternalPackages: isPages ? [] : ["ffmpeg-static"],
+  ...(isPages
+    ? {}
+    : {
+        experimental: {
+          serverActions: {
+            bodySizeLimit: "1mb",
+          },
+        },
+      }),
 };
 
 export default nextConfig;
